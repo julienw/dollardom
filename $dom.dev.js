@@ -440,7 +440,7 @@
             {
                 done = true;
                 if (timer) timer = clearTimeout(timer);
-                for (handler in loadHandlers) { loadHandlers[handler]() }
+                for (var i = 0, l = loadHandlers.length; i < l; i++) { loadHandlers[i]() }
             }
         };
 
