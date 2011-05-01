@@ -2,17 +2,22 @@
 * @preserve $dom library (v0.9.1b) copyright 2009, Keith Clark
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
+*
+* Copyright 2011 Julien Wajsberg
+* Licensed under the MIT License
+* http://github.com/julienw/dollardom
 */
-
-
-(function ()
+/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true */
+/* future jshint options : nomen: true */
+/* undef options seems buggy */
+(function (window)
 {
     var 
     /* these references exist to reduce size in Dean Edwards packer */
-		_document = document,
+		_document = window.document,
 		_true = true,
 		_false = false,
-		_undefined = undefined,
+		_undefined,
 		animTimer, time, animItems = [],
 
     /* dom vars */
@@ -32,15 +37,14 @@
     // or _setStyle() this object is checked first to see if a get/set handler exists for the passed 
     // propertyName. Handlers are camelCase.
 
-		styleHandlers = isIE
-		?
+		styleHandlers = isIE ?
     // Internet Explorer style handlers
 			{
 			"opacity":
 				{
 				    set: function (e, v)
 				    {
-				        var f = e["filters"]["alpha"];
+				        var f = e.filters.alpha;
 
 				        if (!f)
 				        {
@@ -53,17 +57,17 @@
 				    },
 				    get: function (e)
 				    {
-				        var f = e["filters"]["alpha"];
+				        var f = e.filters.alpha;
 				        return f ? f.opacity / 100 : 1;
 				    }
 				},
 			"width":
 				{
-				    get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth }
+				    get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
 				},
 			"height":
 				{
-				    get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight }
+				    get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
 				}
 			}
 		:
@@ -93,36 +97,33 @@
 				}
 			},
 
-     _addEvent = isIE
-        ?
-            function (elm, name, handler)
-            {
-                var eventKey = elm.uniqueID + name + handler;
-                ieEvents[eventKey] = function () { var e = window.event; e.target = e.srcElement; handler(e); }
-                elm.attachEvent("on" + name, ieEvents[eventKey]);
-            }
-        :
+     _addEvent = window.addEventListener ?
             function (elm, name, handler)
             {
                 elm.addEventListener(name, handler, false);
+            }
+        : 
+            function (elm, name, handler)
+            {
+                var eventKey = elm.uniqueID + name + handler;
+                ieEvents[eventKey] = function () { var e = window.event; e.target = e.srcElement; handler(e); };
+                elm.attachEvent("on" + name, ieEvents[eventKey]);
             },
 
-     _removeEvent = isIE
-        ?
+     _removeEvent = window.removeEventListener ?
+            function (elm, name, handler)
+            {
+                elm.removeEventListener(name, handler, false);
+            }
+        :
             function (elm, name, handler)
             {
                 var eventKey = elm.uniqueID + name + handler;
                 elm.detachEvent("on" + name, ieEvents[eventKey]);
                 delete (ieEvents[eventKey]);
-            }
-        :
-            function (elm, name, handler)
-            {
-                elm.removeEventListener(name, handler, false);
             },
 
-    _getStyle = isIE
-		?
+    _getStyle = isIE ?
 			function (elm, property)
 			{
 			    var prop = _getAlias(property), handler = styleHandlers[prop];
@@ -133,9 +134,8 @@
 			{
 			    var prop = _getAlias(property), handler = styleHandlers[prop];
 			    return handler && handler.get ?
-					handler.get(elm)
-				:
-					elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(property)
+					handler.get(elm) :
+					elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(property);
 			};
 
     function _setStyle(elm, property, value)
@@ -147,7 +147,7 @@
 
     function _getAlias(property)
     {
-        return styleAlias[property] || (styleAlias[property] = property.replace(/\-(.)/g, function (m, l) { return l.toUpperCase() }))
+        return styleAlias[property] || (styleAlias[property] = property.replace(/\-(.)/g, function (m, l) { return l.toUpperCase(); }));
     }
 
 
@@ -175,13 +175,21 @@
     function _sel(selector)
     {
         var f, out = [];
-        if (typeof selector == "string")
+        if (typeof selector === "string")
         {
-            while (selector != "")
+            while (selector)
             {
                 f = selector.match(re_selector_fragment);
-                if (f[0] == "") return null;
-                out.push({ rel: f[1], tag: f[2], uTag: (f[2] || "").toUpperCase(), id: f[3], classes: (f[4]) ? f[4].split(".") : _undefined });
+                if (f[0] === "") {
+                    return null;
+                }
+                out.push({
+                    rel: f[1],
+                    tag: f[2],
+                    uTag: (f[2] || "").toUpperCase(),
+                    id: f[3],
+                    classes: (f[4]) ? f[4].split(".") : _undefined
+                });
                 selector = selector.substring(f[0].length);
             }
         }
@@ -198,51 +206,48 @@
 
 
     // $dom's CSS selector
-    function _get(refelm, selector)
+    function _descendants(refelm, selector)
     {
 
         function find(elm, selectorFragment)
         {
-            var c, results = selectorFragment.id
-			?
-				((c = ((elm && elm.ownerDocument) || _document).getElementById(selectorFragment.id)) && _isDescendant(c, elm)) ? [c] : []
-			:
+            var c, results = selectorFragment.id ?
+				((c = ((elm && elm.ownerDocument) || _document).getElementById(selectorFragment.id)) && _isDescendant(c, elm)) ? [c] : [] :
 				toArray(elm.getElementsByTagName(selectorFragment.tag ? selectorFragment.uTag : "*"));
             c = results.length;
 
-            if (c > 0 && (selectorFragment.id || selectorFragment.classes))
-            {
-                while (c--)
-                {
-                    if (!_match(results[c], selectorFragment)) results.splice(c, 1)
+            if (c > 0 && (selectorFragment.id || selectorFragment.classes)) {
+                while (c--) {
+                    if (!_match(results[c], selectorFragment)) {
+                        results.splice(c, 1);
+                    }
                 }
             }
-            return results
+            return results;
         }
 
 
         function toArray(nodes)
         {
-            try
-            {
-                return Array.prototype.slice.call(nodes)
-            }
-            catch (e)
-            {
+            try {
+                return Array.prototype.slice.call(nodes);
+            } catch (e) {
                 var arr = [];
-                for (var i = 0; i < nodes.length; i++) arr.push(nodes[i]);
-                return arr
+                for (var i = 0; i < nodes.length; i++) {
+                    arr.push(nodes[i]);
+                }
+                return arr;
             }
         }
 
-
         function contains(o)
         {
-            for (var c = results.length; c--; )
-            {
-                if (results[c] === o) return _true;
+            for (var c = results.length; c--; ) {
+                if (results[c] === o) {
+                    return _true;
+                }
             }
-            return _false
+            return _false;
         }
 
         var results = [],
@@ -254,7 +259,9 @@
 			fragment,
 			elm, elms;
 
-        if (selectorFragments.length == 0) selectorFragments = [{}];
+        if (!selectorFragments.length) {
+            selectorFragments = [{}];
+        }
 
         for (c = 0, lc = selectorFragments.length; c < lc; c++)
         {
@@ -270,7 +277,7 @@
                         {
                             if (_match(children[e], fragment))
                             {
-                                results.push(children[e])
+                                results.push(children[e]);
                             }
                         }
                         break;
@@ -278,7 +285,6 @@
                     case "~":
                         while (elm = elm.nextSibling)
                         {
- 							
 							if (_match(elm, fragment))
                             {
                                 if (contains(elm))
@@ -291,10 +297,10 @@
                         break;
 
                     case "+":
-                        while ((elm = elm.nextSibling) && elm.nodeType != 1) { };
+                        while ((elm = elm.nextSibling) && elm.nodeType != 1) { }
                         if (elm && _match(elm, fragment))
                         {
-                            results.push(elm)
+                            results.push(elm);
                         }
 						
                         break;
@@ -305,28 +311,32 @@
                         {
                             for (e = 0, le = elms.length; e < le; e++)
                             {
-                                if (!contains(elms[e])) results.push(elms[e])
+                                if (!contains(elms[e])) {
+                                    results.push(elms[e]);
+                                }
                             }
                         }
-                        else { results = results.concat(elms) }
+                        else { results = results.concat(elms); }
                         break;
                 }
             }
 
-            if (results.length === 0) return [];
-            elements = results.splice(0, results.length)
+            if (!results.length) {
+                return [];
+            }
+            elements = results.splice(0, results.length);
 
         }
-        return elements
+        return elements;
     }
 
 
     function _match(elm, selector)
     {
-        return (elm.nodeType == 1 && selector) &&
+        return (elm.nodeType === 1 && selector) &&
 		!(selector.tag && selector.uTag != elm.tagName) &&
 		!(selector.id && selector.id != elm.id) &&
-		!(selector.classes && !_hasClasses(elm, selector.classes))
+		!(selector.classes && !_hasClasses(elm, selector.classes));
     }
 
     function _find(elm, property, selectorFragment)
@@ -335,26 +345,28 @@
 		//if(selectorFragment===_undefined || !selectorFragment.tag)selectorFragment = _sel(selectorFragment);
         selectorFragment = selectorFragment.length > 0 ? selectorFragment[0] : null;
         while (elm && (elm = elm[property]) && (selectorFragment ? (!_match(elm, selectorFragment)) : (elm.nodeType != 1))) { }
-        return elm
+        return elm;
     }
 
     function _hasClasses(elm, classNames)
     {
-        if (elm.className == "") return _false;
+        if (elm.className === "") {
+            return _false;
+        }
         for (var c = 0; c < classNames.length; c++)
         {
-            if (!$dom["hasClass"](elm, classNames[c])) { return _false }
+            if (_hasClass(elm, classNames[c])) { return _false; }
         }
-        return _true
+        return _true;
     }
 
 
     function _removeAnim(index, fin)
     {
         var item = animItems.splice(index, 1)[0];
-        if (typeof item.callback == "function")
+        if (typeof item.callback === "function")
         {
-            item.callback(fin, item.elm)
+            item.callback(fin, item.elm);
         }
     }
 
@@ -370,24 +382,30 @@
             }
         }
 
-        if (properties === _undefined) return i > -1;
-        if (i > -1) _removeAnim(i, _false);
+        if (properties === _undefined) {
+            return i > -1;
+        }
+        if (i > -1) {
+            _removeAnim(i, _false);
+        }
 
-        if (duration === _undefined) duration = 500;
+        if (duration === _undefined) {
+            duration = 500;
+        }
 
 
         for (property in properties)
         {
             s = re_css_property.exec(_style(elm, property));
             e = re_css_property.exec(properties[property]);
-            props[property] = { s: parseFloat(s[1]), e: parseFloat(e[1]), u: s[2] || e[2] || "" }
+            props[property] = { s: parseFloat(s[1]), e: parseFloat(e[1]), u: s[2] || e[2] || "" };
         }
 
         animItems.push({ elm: elm, startTime: new Date(), properties: props, callback: callback, duration: duration });
 
-        if (animTimer == null)
+        if (!animTimer)
         {
-            animTimer = setInterval(function ()
+            animTimer = window.setInterval(function ()
             {
                 for (var c = animItems.length - 1; c >= 0; c--)
                 {
@@ -402,17 +420,15 @@
                     for (prop in anim.properties)
                     {
                         style = anim.properties[prop];
-                        styles[prop] = Number(ticks >= duration
-							?
-								style.e
-							:
-								style.s > style.e
-								?
-									style.e + (style.s - style.e) * ref
-								:
+                        styles[prop] = Number(ticks >= duration ?
+								style.e :
+								style.s > style.e ?
+									style.e + (style.s - style.e) * ref :
 									style.s + (style.e - style.s) * (1 - ref)).toFixed(2) + style.u;
 
-                        if (styles[prop] == "NaNpx") styles[prop] = "0";
+                        if (styles[prop] == "NaNpx") {
+                            styles[prop] = "0";
+                        }
                     }
                     _style(anim.elm, styles);
 
@@ -422,90 +438,148 @@
                     }
                 }
 
-                if (animItems.length == 0)
+                if (!animItems.length)
                 {
-                    animTimer = clearInterval(animTimer)
+                    animTimer = window.clearInterval(animTimer);
                 }
-            }, 10)
+            }, 10);
         }
     }
 
 
 
-    function dom()
+    function init()
     {
-        var done, timer, handler, fn = function (e)
-        {
-            if (!done)
-            {
+        var done, timer, handler;
+        function fn(e) {
+            if (!done) {
                 done = true;
-                if (timer) timer = clearTimeout(timer);
-                for (var i = 0, l = loadHandlers.length; i < l; i++) { loadHandlers[i]() }
+                if (timer) {
+                    timer = window.clearTimeout(timer);
+                }
+                for (var i = 0, l = loadHandlers.length; i < l; i++) { loadHandlers[i](); }
             }
-        };
+        }
 
         window.onload = fn;
 
         if (_document.addEventListener)
         {
-            _document.addEventListener('DOMContentLoaded', fn, _false)
+            _document.addEventListener('DOMContentLoaded', fn, _false);
         }
 
-
-        (function ()
-        {
+        function initTimer() {
             var ready = /loaded|complete/.test(_document.readyState);
-            if (!ready && isIE)
-            {
+            if (!ready && isIE) {
                 try
                 {
                     // Diego Perini's doScroll trick
 					_document.documentElement.doScroll("left");
-                    ready = _true
-                }
-                catch (e) { }
+                    ready = _true;
+                } catch (e) { }
             }
-            if (ready)
-            {
+            if (ready) {
                 fn(/*{ type: "timer" }*/);
+            } else {
+                window.setTimeout(initTimer, 50);
             }
-            else
-            {
-                setTimeout(arguments.callee, 50);
-            }
-        })();
+        }
+
+        initTimer();
+    }
+
+     function _create(selector, doc) {
+         var s = _sel(selector)[0],
+             e = (doc || _document).createElement(s.tag);
+        if (s.id) {
+            e.id = s.id;
+        }
+        
+        if (s.classes) {
+            e.className = s.classes.join(" ");
+        }
+        return e;
+     }
+
+    function _onready(handler) {
+        loadHandlers.push(handler);
+    }
+
+    function _get(selector, doc) {
+        return _descendants((doc || _document), selector);
+    }
+
+    function _ancestor(elm, selector) {
+        return _find(elm, "parentNode", selector);
+    }
+    function _next(elm, selector) {
+        return _find(elm, "nextSibling", selector);
+    }
+
+    function _previous(elm, selector) {
+        return _find(elm, "previousSibling", selector);
+    }
+
+    function _first(elm, selector) {
+        var p = elm.parentNode;
+        return _find(p, "firstChild", selector) || _next(p.firstChild, selector);
+    }
+    function _last(elm, selector) {
+        var p = elm.parentNode;
+        return _find(p, "lastChild", selector) || _previous(p.lastChild, selector);
+    }
+
+    function _hasClass(elm, className) {
+        return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
+    }
+
+    function _addClass(elm, className) {
+        if (!_hasClass(elm, className)) {
+            elm.className += " " + className;
+        }
+    }
+
+    function _removeClass(elm, className) {
+        if (_hasClass(elm, className)) {
+            elm.className = elm.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), " ").replace(/\s$/, "");
+        }
+    }
+
+    function _toggleClass(elm, className, expr) {
+        (expr ? _addClass : _removeClass)(elm, className);
     }
 
 
-    dom["prototype"] =
-	{
+    var dom = {
 	    /* -- Experimental methods --*/
 
-	    "create": function (selector, doc) { var s = _sel(selector)[0], e = (doc || _document).createElement(s.tag); if (s.id) { e.id = s.id }; if (s.classes) { e.className = s.classes.join(" ") }; return e },
-	    "onready": function (handler) { loadHandlers.push(handler) },
+	    create: _create,
+        onready: _onready,
 
 	    /* events */
-	    "addEvent": _addEvent,
-	    "removeEvent": _removeEvent,
+	    addEvent: _addEvent,
+	    removeEvent: _removeEvent,
 
 	    /* selections */
-	    "get": function (selector, doc) { return this["descendants"]((doc || _document), selector) },
-	    "descendants": function (elm, selector) { return _get(elm, selector) },
-	    "ancestor": function (elm, selector) { return _find(elm, "parentNode", selector) },
-	    "next": function (elm, selector) { return _find(elm, "nextSibling", selector) },
-	    "previous": function (elm, selector) { return _find(elm, "previousSibling", selector) },
-	    "first": function (elm, selector) { var p = elm.parentNode; return _find(p, "firstChild", selector) || this["next"](p.firstChild, selector) },
-	    "last": function (elm, selector) { var p = elm.parentNode; return _find(p, "lastChild", selector) || this["previous"](p.lastChild, selector) },
+	    get: _get,
+	    descendants: _descendants,
+	    ancestor: _ancestor,
+	    next: _next,
+	    previous: _previous,
+	    first: _first,
+	    last: _last,
 
 	    /* styling */
-	    "hasClass": function (elm, className) { return (" " + elm.className + " ").indexOf(" "+className+" ") > -1 },
-	    "addClass": function (elm, className) { if (!this["hasClass"](elm, className)) elm.className += (elm.className != "" ? " " : "") + className },
-	    "removeClass": function (elm, className) { if (this["hasClass"](elm, className)) elm.className = elm.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), " ").replace(/\s$/, "") },
-	    "toggleClass": function (elm, className, expr) { this[(expr === _true) ? "addClass" : "removeClass"](elm, className) },
-	    "style": function (elm, property, value) { return _style(elm, property, value) },
-	    "transform": function (elm, properties, duration, callback) { return _anim(elm, properties, duration, callback) }
+	    hasClass: _hasClass,
+	    addClass: _addClass,
+	    removeClass: _removeClass,
+	    toggleClass: _toggleClass,
+	    style: _style,
+	    transform: _anim
 	};
 
-    window["$dom"] = new dom();
-})();
+    window.$dom = dom;
+    init();
+
+})(this);
 
