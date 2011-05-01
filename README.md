@@ -11,6 +11,9 @@ FAQ
 I used $dom in a project and wanted to fix one bug. Moreover Keith Clark stopped maintaining this code
 and I felt it is still useful nowadays.
 
+I asked him where I could find the original source code (since only the minified/obfuscated code was available on
+his website) and he kindly sent it to me.
+
 ### Why $dom ? There are lots of other very good libraries outthere
 That's right. For big projects, you can use jQuery, Dojo, ExtJS, Prototype, etc. For mobile projects, there are
 jQuery Mobile, jqtouch, Sencha touch, Zepto.js, xui.js.
