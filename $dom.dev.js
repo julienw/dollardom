@@ -13,8 +13,9 @@
 (function (window)
 {
     var 
-    /* these references exist to reduce size in Dean Edwards packer */
+    /* these references exist to reduce size in minifiers */
 		_document = window.document,
+        _docElt = _document.documentElement,
 		_true = true,
 		_false = false,
 		_undefined,
@@ -23,6 +24,7 @@
     /* dom vars */
 		re_css_property = /^(.*?)(px|deg)?$/,
 		re_selector_fragment = /^\s*([>+~])?\s*([*a-z0-9\-_]+)?(?:#([a-z0-9\-_]+))?(?:\.([a-z0-9\.\-_]+))?\s*/i,
+        re_get_alias = /\-(\w)/g,
 		isIE = /*@cc_on!@*/_false,
 		loadHandlers = [],
         ieEvents = [],
@@ -30,7 +32,7 @@
     // styleAlias is a css-name to camelCaseName lookup that's automatically populated when calling
     // the _getStyle() and _setStyle() methods. It's pre-populated with the float css lookup.
 
-		styleAlias = { "float": isIE ? "styleFloat" : "cssFloat" },
+		styleAlias = { "float": "cssFloat" in _docElt.style ? "cssFloat" : "styleFloat" },
 
 
     // style handers are used to extend or override existing css properties. When calling _getStyle()
@@ -40,33 +42,25 @@
 		styleHandlers = isIE ?
     // Internet Explorer style handlers
 			{
-			"opacity":
-				{
-				    set: function (e, v)
-				    {
+			"opacity": {
+				    set: function (e, v) {
 				        var f = e.filters.alpha;
 
-				        if (!f)
-				        {
+				        if (!f) {
 				            e.style.filter += " Alpha(opacity=" + (v * 100) + ")";
-				        }
-				        else
-				        {
+				        } else {
 				            f.opacity = v * 100;
 				        }
 				    },
-				    get: function (e)
-				    {
+				    get: function (e) {
 				        var f = e.filters.alpha;
 				        return f ? f.opacity / 100 : 1;
 				    }
 				},
-			"width":
-				{
+			"width": {
 				    get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
 				},
-			"height":
-				{
+			"height": {
 				    get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
 				}
 			}
@@ -74,24 +68,18 @@
     // Standards based style handlers
 
 			{
-			"borderWidth":
-				{
-				    get: function (e)
-				    {
+			"borderWidth": {
+				    get: function (e) {
 				        return _getStyle(e, "border-left-width");
 				    }
 				},
-			"padding":
-				{
-				    get: function (e)
-				    {
+			"padding": {
+				    get: function (e) {
 				        return _getStyle(e, "padding-left");
 				    }
 				},
-			"margin":
-				{
-				    get: function (e)
-				    {
+			"margin": {
+				    get: function (e) {
 				        return _getStyle(e, "margin-left");
 				    }
 				}
@@ -147,7 +135,7 @@
 
     function _getAlias(property)
     {
-        return styleAlias[property] || (styleAlias[property] = property.replace(/\-(.)/g, function (m, l) { return l.toUpperCase(); }));
+        return styleAlias[property] || (styleAlias[property] = property.replace(re_get_alias, function (m, l) { return l.toUpperCase(); }));
     }
 
 
@@ -461,31 +449,49 @@
             }
         }
 
-        window.onload = fn;
+        // Diego Perini's doScroll trick
+        // see http://javascript.nwbox.com/IEContentLoaded/
+        function scrollCheck() {
+            try {
+                _docElt.doScroll("left");
+            } catch (e) {
+                window.setTimeout(scrollCheck, 20);
+                return;
+            }
 
+            fn();
+        }
+
+        if (/loaded|complete/.test(_document.readyState)) {
+            // already ready
+            window.setTimeout(fn, 0);
+            return;
+        }
+
+        /* we're lucky because addEventListener and DOMContentLoaded are both
+         * supported from IE9 */
         if (_document.addEventListener)
         {
             _document.addEventListener('DOMContentLoaded', fn, _false);
-        }
+            /* just to be sure */
+            _document.addEventListener('load', fn, _false);
+        } else if (_document.attachEvent) {
+            // IE8-
+            /* just to be sure */
+            _document.attachEvent('onload', fn);
 
-        function initTimer() {
-            var ready = /loaded|complete/.test(_document.readyState);
-            if (!ready && isIE) {
-                try
-                {
-                    // Diego Perini's doScroll trick
-					_document.documentElement.doScroll("left");
-                    ready = _true;
-                } catch (e) { }
-            }
-            if (ready) {
-                fn(/*{ type: "timer" }*/);
-            } else {
-                window.setTimeout(initTimer, 50);
+            /* doScroll is not adequate when we're in a frame */
+            /* (from jQuery) */
+            var toplevel = false;
+
+            try {
+                toplevel = (window.frameElement === null);
+            } catch(e) {}
+
+            if (!toplevel && _docElt.doScroll) {
+                scrollCheck();
             }
         }
-
-        initTimer();
     }
 
      function _create(selector, doc) {
