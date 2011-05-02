@@ -25,7 +25,6 @@
 		re_css_property = /^(.*?)(px|deg)?$/,
 		re_selector_fragment = /^\s*([>+~])?\s*([*a-z0-9\-_]+)?(?:#([a-z0-9\-_]+))?(?:\.([a-z0-9\.\-_]+))?\s*/i,
         re_get_alias = /\-(\w)/g,
-		isIE = /*@cc_on!@*/_false,
 		loadHandlers = [],
         ieEvents = [],
 
@@ -39,10 +38,29 @@
     // or _setStyle() this object is checked first to see if a get/set handler exists for the passed 
     // propertyName. Handlers are camelCase.
 
-		styleHandlers = isIE ?
+    // Standards based style handlers
+
+	    styleHandlers = {
+			borderWidth: {
+				    get: function (e) {
+				        return _getStyle(e, "border-left-width");
+				    }
+				},
+			padding: {
+				    get: function (e) {
+				        return _getStyle(e, "padding-left");
+				    }
+				},
+			margin: {
+				    get: function (e) {
+				        return _getStyle(e, "margin-left");
+				    }
+				}
+			};
+
     // Internet Explorer style handlers
-			{
-			"opacity": {
+        if ((! "opacity" in docElt.style) && "filters" in docElt) {
+            styleHandlers.opacity = {
 				    set: function (e, v) {
 				        var f = e.filters.alpha;
 
@@ -56,36 +74,21 @@
 				        var f = e.filters.alpha;
 				        return f ? f.opacity / 100 : 1;
 				    }
-				},
-			"width": {
-				    get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
-				},
-			"height": {
-				    get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
-				}
-			}
-		:
-    // Standards based style handlers
-
-			{
-			"borderWidth": {
-				    get: function (e) {
-				        return _getStyle(e, "border-left-width");
-				    }
-				},
-			"padding": {
-				    get: function (e) {
-				        return _getStyle(e, "padding-left");
-				    }
-				},
-			"margin": {
-				    get: function (e) {
-				        return _getStyle(e, "margin-left");
-				    }
-				}
-			},
-
-     _addEvent = window.addEventListener ?
+				};
+        }
+        // should trigger in IE and in some recent clients
+        // TODO : this is just plain wrong
+        if ("clientWidth" in docElt) {
+            styleHandlers.width = {
+                get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
+            };
+        }
+        if ("clientHEight" in docElt) {
+            styleHandlers.height = {
+                get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
+			};
+        }
+     var _addEvent = window.addEventListener ?
             function (elm, name, handler)
             {
                 elm.addEventListener(name, handler, false);
@@ -111,20 +114,21 @@
                 delete (ieEvents[eventKey]);
             },
 
-    _getStyle = isIE ?
-			function (elm, property)
-			{
-			    var prop = _getAlias(property), handler = styleHandlers[prop];
-			    return ((handler && handler.get) ? handler.get(elm) : elm.currentStyle[prop]);
-			}
-		:
+    _getStyle = (_document.defaultView && _document.defaultView.getComputedStyle) ?
 			function (elm, property)
 			{
 			    var prop = _getAlias(property), handler = styleHandlers[prop];
 			    return handler && handler.get ?
 					handler.get(elm) :
 					elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(property);
-			};
+			}
+        :
+			function (elm, property)
+			{
+			    var prop = _getAlias(property), handler = styleHandlers[prop];
+			    return ((handler && handler.get) ? handler.get(elm) : elm.currentStyle[prop]);
+			}
+        ;
 
     function _setStyle(elm, property, value)
     {
