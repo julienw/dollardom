@@ -7,6 +7,12 @@ $dom was coded by Keith Clark and was once available at http://www.keithclark.co
 FAQ
 ---
 
+### Which version to download ?
+$dom.dev.js is always the most up to date version. It is currently facing big changes, especially in its Internet
+Explorer support, but should work. Please report any bug you find.
+
+I'll try to keep $dom.min.js (minified with uglifyjs) in sync but take attention to the timestamp to be sure.
+
 ### Why ?
 I used $dom in a project and wanted to fix one bug. Moreover Keith Clark stopped maintaining this code
 and I felt it is still useful nowadays.
@@ -34,9 +40,6 @@ be installed with the command :
     aptitude install libnode-uglify
 
 ### TODO
-* remove the isIE variable and use feature sniffing instead.
-* make the library compressable with uglify
-(it is not right now, because of the use of IE conditional compilation to compute the previous isIE variable)
 * separate the animate part
 * write good documentation
 * write good tests
