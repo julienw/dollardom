@@ -1,0 +1,1351 @@
+<!doctype HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<style type="text/css">
+	body					{ font: 13px/1.3 Tahoma; padding:0 0 0 220px; margin: 0}
+	h2,h3,h4,p,dl,pre		{ margin:0 0 1.5em 0 }
+	h1						{ font-size:130%; background:#eee; margin:0 0 0 -220px; padding:15px; border-bottom:2px solid #aaa }
+	h2						{ font-size:200%;  margin-bottom:0.5em}
+	h3						{ font-size:140%; color:#999;}
+	h4						{ font-size:100%; }
+	dt						{ margin-bottom:-1.2em }
+	dd						{ margin-left:230px }
+	pre						{ display:block; border:1px solid #ccc; border-left-width:20px; background:#eee; padding:10px; margin-bottom:1.5em; overflow:auto; font-size:90% }
+	var						{ color:#00c }
+	hr						{ display: none }
+
+	.page					{ padding:20px 20px 20px 220px; border-left:2px solid #ccc; height:100% }
+	.page h2 				{ margin-left:-200px; }
+	.page h3 				{ margin-left:-200px; margin-bottom:-1em; border-top:1px solid #ccc; padding-top:0.75em}
+	.page.inactive			{ display:none }
+
+	#tree 					{ float:left; width:180px; margin-left:-220px; padding:20px; position: relative; border-right:2px solid #ccc }
+	#tree ul				{ list-style: square; margin: 0 0 2em 16px; padding:0 }
+	#tree h2				{ font-size:110%; border-bottom:1px solid #ccc}
+	#tree a					{ padding:1px 5px; color: #000; text-decoration: none}
+	#tree a.active			{ background:#cde; font-weight:bold }
+	
+	#footer					{ border-top:2px solid #ccc; background:#eee; clear: both; margin-left:-220px; text-align: center; padding:20px 0}
+	</style>
+	<style type="text/css" media="print">
+		body { padding-left:0; font-size:12px }
+		#tree, h1 { display: none }
+		.page { padding: 0; border:none }
+		.page h2 { margin-left: 0;  }
+		.page h3 { margin-left: 0; margin-bottom: 0.5em }
+	</style>
+	<script type="text/javascript" src="../$dom.min.js"></script>
+	<script>
+		$dom.onready( function()
+		{
+			var links = $dom.get("#tree>ul>li>a");
+			var pages = $dom.get("#pages>div");
+			
+			for (var c=0;c<links.length;c++)
+			{
+				links[c].onclick = function()
+				{
+					showPage( this.href ); 
+					return false
+				}
+			}
+
+			function getHash(url)
+			{
+				var hashPos = url.indexOf("#")
+				return (hashPos>0) ? url.substring(hashPos+1) : ""
+			}
+
+			function showPage( url )
+			{
+				var id = getHash( url )
+				for (var c=0;c<pages.length;c++)
+				{
+					$dom.toggleClass(pages[c], "inactive", pages[c].id != id )
+				}
+				for (var c=0;c<links.length;c++)
+				{
+					$dom.toggleClass(links[c], "active", getHash(links[c].href) == id )
+				}
+				document.documentElement.scrollTop = 0
+			}
+			showPage( document.location.href )
+
+		})
+	</script>
+</head>
+<body>
+<h1>$dom Javascript library v0.9.1b documentation</h1>
+
+<div id="tree">
+	<h2>Overview</h2>
+	<ul>
+		<li><a href="">Welcome</a></li>
+	</ul>
+	
+	<h2>General</h2>
+	<ul>
+		<li><a href="#dom-onready">$dom.onready</a></li>
+		<li><a href="#dom-get">$dom.get</a></li>
+		<li><a href="#dom-create">$dom.create</a></li>
+	</ul>
+
+	<h2>DOM Traversal</h2>
+	<ul>
+		<li><a href="#dom-ancestor">$dom.ancestor</a></li>
+		<li><a href="#dom-descendants">$dom.descendants</a></li>
+		<li><a href="#dom-first">$dom.first</a></li>
+		<li><a href="#dom-last">$dom.last</a></li>
+		<li><a href="#dom-next">$dom.next</a></li>
+		<li><a href="#dom-previous">$dom.previous</a></li>
+	</ul>
+	
+	<h2>CSS / Animation</h2>
+	<ul>
+		<li><a href="#dom-addClass">$dom.addClass</a></li>
+		<li><a href="#dom-removeClass">$dom.removeClass</a></li>
+		<li><a href="#dom-toggleClass">$dom.toggleClass</a></li>
+		<li><a href="#dom-hasClass">$dom.hasClass</a></li>
+		<li><a href="#dom-style">$dom.style</a></li>
+		<li><a href="#dom-transform">$dom.transform</a></li>
+	</ul>
+</div>
+
+<div id="pages">
+
+	<div class="page">
+		<h2>Welcome to the $dom documentation</h2>
+		
+		<h3>Overview</h3>
+		<p><b>$dom is a tiny Javascript library for selecting, traversing and animating DOM elements.</b></p>
+		<h3>Notes</h3>
+		<p>This project is in beta testing phase:</p>
+		<ul>
+			<li>It may contain bugs. If you encounter any problems, feedback would be appreciated.</li>
+			<li>This is temporary documentation for beta testers, the final version will appear online.</li>
+			<li>More information can be found on the <a href="https://github.com/julienw/dollardom">$dom page</a> on github.</li>
+		</ul>
+
+        <h3>Change log</h3>
+        <h4>v0.9.2b</h4>
+        <ul>
+            <li>project hosted on github</li>
+            <li>fixed a bug when the Array prototype was modified</li>
+            <li>Removed isIE variable -- now we do feature sniffing instead</li>
+            <li>Reorganized somewhat the code</li>
+            <li>resolved jshint error reports</li>
+            <li>now we compress with uglifyjs</li>
+        </ul>
+		<h4>v0.9.1b</h4>
+		<ul>
+			<li>Added <code>$dom.create( selector, document )</code> for creating DOM nodes from CSS selectors.</li>
+			<li>Fixed bug with <code>$dom.style(elm, "width")</code> in IE.</li>
+			<li>Recompressed with Googles closure compiler.</li>
+			<li>Updated documentation and fixed some typo's.</li>
+		</ul>
+		<h4>v0.9b</h4>
+		<ul>
+			<li>Initial release.</li>
+		</ul>
+
+		
+		<h3>License</h3>
+		<p>Copyright (c) 2009, Keith Clark</p>
+
+		 <p>Permission is hereby granted, free of charge, to any person
+		 obtaining a copy of this software and associated documentation
+		 files (the "Software"), to deal in the Software without
+		 restriction, including without limitation the rights to use,
+		 copy, modify, merge, publish, distribute, sublicense, and/or sell
+		 copies of the Software, and to permit persons to whom the
+		 Software is furnished to do so, subject to the following
+		 conditions:</p>
+
+		 <p>The above copyright notice and this permission notice shall be
+		 included in all copies or substantial portions of the Software.</p>
+
+		 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+		 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+		 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+		 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+		 HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+		 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+		 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+		 OTHER DEALINGS IN THE SOFTWARE.</p>
+		<hr />
+	</div>	
+	<div class="page" id="dom-onready">
+		<h2>$dom.onready</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.onready( <var>function</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>function</var></dt>
+			<dd>A function reference.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+
+		<h3>Notes</h3>
+		<p>This method will execute the passed function as soon as the DOM is ready. If you call this method 
+		multiple times each function will be queued and executed in the order they were added.</p>
+		
+		
+		<h3>Examples</h3>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			$dom.style( document.body, "background-color", "#ffff00" );
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;h1&gt;Test of $dom.onready&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>
+	<div class="page" id="dom-get">
+		<h2>$dom.get</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.get( <var>query</var> [, <var>document</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>query</var> [optional]</dt>
+			<dd>A selector string </dd>
+			<dt><var>document</var> [optional]</dt>
+			<dd>A <code>document</code> object to use as the start point - useful for working inside iframes.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Array of <code>elements</code>.</p>
+
+		<h3>Notes</h3>
+		<p>This method will return all elements in passed <var>document</var> matching the passed <var>query</var>. If no document is
+		passed the the current document will be used. If no query is passed, all elements are returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+		
+		<h4>Supported combinator formats</h4>
+		<dl>
+			<dt><code>div p</code></dt>
+			<dd>Descendant combinator - matches all descendants of the current selector.</dd>
+			<dt><code>div &gt; p</code></dt>
+			<dd>Child combinator - matches the immediate children of the current selector.</dd>
+			<dt><code>div ~ p</code></dt>
+			<dd>General sibling combinator - matches all siblings following the current selector.</dd>
+			<dt><code>div + p</code></dt>
+			<dd>Adjacent sibling combinator - matches the sibling that immediately follows the current selector.</dd>
+		</dl>
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var nodes = $dom.get();
+var nodes = $dom.get( "#test" );
+var nodes = $dom.get( "div#test.panel.main" );
+var nodes = $dom.get( "h1 ~ p" );
+var nodes = $dom.get( "a.external", frames["testframe"].contentDocument.document );
+</pre>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find links one level deep in the nav bar
+			var links = $dom.get("#nav &gt; li &gt; a");
+			
+			// style the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				$dom.style( links[c], "border", "1px solid #ff0000" );
+			}
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul id="nav"&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;a href="subpage1.html"&gt;Sub Page 1&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a href="subpage2.html"&gt;Sub Page 2&lt;/a&gt;&lt;/li&gt;
+			&lt;/ul&gt;	
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>	
+	<div class="page" id="dom-descendants">
+		<h2>$dom.descendants</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.descendants( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A <code>element</code> to use as the start point.</dd>
+			<dt><var>query</var> [Optional]</dt>
+			<dd>A selector string.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Array of <code>element</code>.</p>
+
+		<h3>Notes</h3>
+		<p>This function searches all the descendant nodes of the passed <var>element</var>. If a selector query is passed then only
+		descendants matching this query will be returned. If no matches are found an empty array is returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+		
+		<h4>Supported combinator formats</h4>
+		<dl>
+			<dt><code>div p</code></dt>
+			<dd>Descendant combinator - matches all descendants of the current selector.</dd>
+			<dt><code>div &gt; p</code></dt>
+			<dd>Child combinator - matches the immediate children of the current selector.</dd>
+			<dt><code>div ~ p</code></dt>
+			<dd>General sibling combinator - matches all siblings following the current selector.</dd>
+			<dt><code>div + p</code></dt>
+			<dd>Adjacent sibling combinator - matches the sibling that immediately follows the current selector.</dd>
+		</dl>
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var nodes = $dom.descendants( document.body, "#test" );
+var nodes = $dom.descendants( document.body, "div#test.panel.main" );
+var nodes = $dom.descendants( document.body, "&gt; div" );
+var nodes = $dom.descendants( document.body, "div#content ~ div.panel" );
+var nodes = $dom.descendants( document.body, "div.tabs &gt; ul ~ .tab" );
+var nodes = $dom.descendants( document.body, "#content &gt; ul &gt; li" );
+var nodes = $dom.descendants( document.body, "body h1 + p" );
+var nodes = $dom.descendants( $dom.get("#content")[0], "&gt; div &gt; h1.main" );
+var nodes = $dom.descendants( document.body );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find the first UL tag
+			var ul = $dom.get("ul")[0];
+			
+			// find all descendant links
+			var links = $dom.descendants(ul, "a");
+			
+			// style the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				$dom.style( links[c], "border", "1px solid #ff0000" );
+			}
+				
+			// find immediate descendant links
+			var links = $dom.descendants(ul, "&gt; li &gt; a");
+			
+			// style the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				$dom.style( links[c], "background-color", "#ffff00" );
+			}
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;p&gt;This is a &lt;a href="home.html"&gt;Link&lt;/a&gt;.&lt;/p&gt;	
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;a href="subpage1.html"&gt;Sub Page 1&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a href="subpage2.html"&gt;Sub Page 2&lt;/a&gt;&lt;/li&gt;
+			&lt;/ul&gt;	
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />		
+	</div>
+	<div class="page" id="dom-first">
+		<h2>$dom.first</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.first( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A <code>element</code> to use as the start point.</dd>
+			<dt><var>query</var> [Optional]</dt>
+			<dd>The selector string of the first sibling element you wish to find.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Returns a single <code>element</code> or <code>null</code></p>
+
+		<h3>Notes</h3>
+		<p>This function searches all the sibling nodes that preceed the passed <var>element</var> looking for the first 
+		element that matches the passed <var>query</var>. If a query is not passed passed then the first sibling element will 
+		be returned. If no matches are found an then <code>null</code> is returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.first( document.body, "head" );
+var node = $dom.first( $dom.get("li")[4], "li" );
+var node = $dom.first( $dom.get("li") );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			// find the first UL tag
+			var middleLI = $dom.get("li")[2];
+			
+			// find the first sibling LI and style it
+			var firstLI = $dom.first( middleLI, "li" );
+			$dom.style( firstLI, "border", "1px solid #ff0000" );
+
+			// find the first sibling LI with a class of test and style it
+			var firstLI = $dom.first( middleLI, "li.test" );
+			$dom.style( firstLI, "border", "1px solid #0000ff" );
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		<hr />		
+	</div>
+	<div class="page" id="dom-last">
+		<h2>$dom.last</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.last( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A <code>element</code> to use as the start point.</dd>
+			<dt><var>query</var> [Optional]</dt>
+			<dd>The selector string of the last sibling element you wish to find.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Returns a single <code>element</code> or <code>null</code></p>
+
+		<h3>Notes</h3>
+		<p>This function searches all the sibling nodes that follow the passed <var>element</var> looking for the last 
+		element that matches the passed <var>query</var>. If no query is specified then the last sibling element will 
+		be returned. If no matches are found an then <code>null</code> is returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.last( $dom.get("li")[4], "li" );
+var node = $dom.last( $dom.get("li") );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			// find the first UL tag
+			var middleLI = $dom.get("li")[2]
+			
+			// find the first sibling LI and style it
+			var lastLI = $dom.last( middleLI, "li" );
+			$dom.style( lastLI, "border", "1px solid #ff0000" );
+
+			// find the first sibling LI with a class of test and style it
+			var lastLI = $dom.last( middleLI, "li.test" );
+			$dom.style( lastLI, "border", "1px solid #0000ff" );
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		<hr />		
+	</div>
+	<div class="page" id="dom-next">
+		<h2>$dom.next</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.next( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A <code>element</code> to use as the start point.</dd>
+			<dt><var>query</var> [Optional]</dt>
+			<dd>The selector string of the next sibling element you wish to find.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Returns a single <code>element</code> or <code>null</code></p>
+
+		<h3>Notes</h3>
+		<p>This function searches all the sibling nodes that follow the passed <var>element</var> looking for an  
+		element that matches the passed <var>query</var>. If a query is not passed passed then the next element will 
+		be returned. If no matches are found an then <code>null</code> is returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.next( $dom.get("li")[0], "li" );
+var node = $dom.next( $dom.get("li")[0] );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			// find the first UL tag
+			var firstLI = $dom.get("li")[0];
+			
+			// find the next sibling LI and style it
+			var nextLI = $dom.next( firstLI, "li" );
+			$dom.style( nextLI, "border", "1px solid #ff0000" );
+
+			// find the next sibling LI with a class of test and style it
+			var nextLI = $dom.next( firstLI, "li.test" );
+			$dom.style( nextLI, "border", "1px solid #0000ff" );
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		<hr />		
+	</div>
+	<div class="page" id="dom-previous">
+		<h2>$dom.previous</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.previous( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A <code>element</code> to use as the start point.</dd>
+			<dt><var>query</var> [Optional]</dt>
+			<dd>The selector string of the sibling element you wish to find.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Returns a single <code>element</code> or <code>null</code></p>
+
+		<h3>Notes</h3>
+		<p>This function searches all the sibling nodes that preceed the passed <var>element</var> looking for an  
+		element that matches the passed <var>query</var>. If a query is not passed passed then the previous element will 
+		be returned. If no matches are found an then <code>null</code> is returned.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.previous( document.body, "head" );
+var node = $dom.previous( $dom.get("li")[4], "li" );
+var node = $dom.previous( $dom.get("p") );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			// find the first UL tag
+			var middleLI = $dom.get("li")[2];
+			
+			// find the first sibling LI and style it
+			var previousLI = $dom.previous( middleLI, "li" );
+			$dom.style( previousLI, "border", "1px solid #ff0000" );
+
+			// find the first sibling LI with a class of test and style it
+			var previousLI = $dom.previous( middleLI, "li.test" );
+			$dom.style( previousLI, "border", "1px solid #0000ff" );
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li class="test"&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="test"&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		
+		<hr />
+	</div>
+	<div class="page" id="dom-style">
+		<h2>$dom.style</h2>
+		<h3>Syntax</h3>
+		<h4>To read a style value</h4>
+		<pre>styleValue = $dom.style( <var>element</var>, <var>styleName</var> )</pre>
+		<h4>To set a style value</h4>
+		<pre>$dom.style( <var>element</var>, <var>styleName</var>, <var>styleValue</var> )</pre>
+		<p>or...</p>
+		<pre>$dom.style( <var>element</var>, <var>styles</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to get/set style of.</dd>
+			<dt><var>propertyName</var></dt>
+			<dd>The CSS name of the property to get/set (i.e. "background-color", "font-family").</dd>
+			<dt><var>propertyValue</var></dt>
+			<dd>The value to apply to the property.</dd>
+			<dt><var>styles</var></dt>
+			<dd>An style object to apply (see notes).</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>When reading an elements style a <code>string</code> is returned otherwise nothing is returned.</p>
+		
+		<h3>Notes</h3>
+		<p>This method is used to get <i>and</i> set style values for the specified <var>element</var>. If a
+		<var>propertyName</var> is passed without a <var>propertyValue</var> then the resulting property value will be returned. 
+		If a <var>propertyValue</var> is passed with a <var>propertyValue</var> then the property will be set to the passed value.</p>
+		
+		<h4>Setting multiple properties</h4>
+		<p>It's possible to set mutiple properties in one statement by passing them as in object notation form:</p>
+		<pre>{ "background-color": "#ff0000", color: "#ffff00", opacity: 0.5 } </pre>
+		<p>So, the following statement:</p>
+		<pre>$dom.style( elm, {"background-color": "#ff0000", color: "#ffff00", opacity: 0.5 })</pre>
+		<p>Is equivilent to:</p>
+		<pre>$dom.style( elm, "background-color", "#ff0000");
+$dom.style( elm, "color", "#ffff00");
+$dom.style( elm, "opacity", 0.5);</pre>
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var bgColor = $dom.style( document.body, "background-color");
+$dom.style( document.body, "background-color", "#ffcc00" );
+$dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "font-family": "Arial" } );
+</pre>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find all links
+			var links = $dom.get("a");
+			
+			// add mouse events to the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				links[c].onmouseover = function () {
+					$dom.style( this, {"background-color": "#ffcc00", color:"#000"} );
+				}
+				links[c].onmouseout = function () {
+					$dom.style( this, {"background-color": "", color:""} );
+				}		
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		<hr />
+	</div>
+	<div class="page" id="dom-addClass">
+		<h2>$dom.addClass</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.addClass( <var>element</var>, <var>className</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to add the class to.</dd>
+			<dt><var>className</var></dt>
+			<dd>The class name to add.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+		
+		<h3>Notes</h3>
+		<p>This method will add the passed <var>className</var> to the specified <var>element</var>s <code>class</code> attribute.</p>
+		
+		<h3>Examples</h3>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.hover { 
+			background-color: #00ff00;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find all links
+			var links = $dom.get("a");
+			
+			// add mouse events to the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				links[c].onmouseover = function () {
+					$dom.addClass( this, "hover" );
+				}
+				links[c].onmouseout = function () {
+					$dom.removeClass( this, "hover" );
+				}		
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;p&gt;Hover over each link to toggle its class:&lt;/p&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+		<hr />
+	</div>
+	<div class="page" id="dom-removeClass">
+		<h2>$dom.removeClass</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.removeClass( <var>element</var>, <var>className</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to remove the class from.</dd>
+			<dt><var>className</var></dt>
+			<dd>The class name to remove.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+		
+		<h3>Notes</h3>
+		<p>This method will remove the passed <var>className</var> from the specified <var>element</var>s <code>class</code> attribute.</p>
+		
+		<h3>Examples</h3>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.hover { 
+			background-color: #00ff00;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find all links
+			var links = $dom.get("a");
+			
+			// add mouse events to the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				links[c].onmouseover = function () {
+					$dom.addClass( this, "hover" );
+				}
+				links[c].onmouseout = function () {
+					$dom.removeClass( this, "hover" );
+				}		
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;p&gt;Hover over each link to toggle its class:&lt;/p&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page4.html"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page5.html"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+	<div class="page" id="dom-toggleClass">
+		<h2>$dom.toggleClass</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.toggleClass( <var>element</var>, <var>className</var>, <var>classOn</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to toggle.</dd>
+			<dt><var>className</var></dt>
+			<dd>String - The class name to toggle.</dd>
+			<dt><var>classOn</var></dt>
+			<dd>Boolean - Used to determine if the class is added or removed.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+		
+		<h3>Notes</h3>
+		<p>This method will add or remove the passed <var>className</var> from the specified <var>element</var>s <code>class</code> attribute. If <var>classOn</var>
+		evaluates to <code>true</code> then the <var>className</var> will be added, otherwise it will be removed.</p>
+		
+		<h3>Examples</h3>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.on { 
+			background-color: #00ff00;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find all links
+			var links = $dom.get("a");
+			
+			// add mouse events to the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				links[c].onclick = function () {
+					$dom.toggleClass( this, "on", !$dom.hasClass(this, "on") );
+				}	
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;p&gt;Click each link to toggle its class:&lt;/p&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+	<div class="page" id="dom-hasClass">
+		<h2>$dom.hasClass</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.hasClass( <var>element</var>, <var>className</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to check.</dd>
+			<dt><var>className</var></dt>
+			<dd>String - The class name to test for.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p><code>Boolean</code></p>
+		
+		<h3>Notes</h3>
+		<p>This method checks the specified <var>element</var>s <code>class</code> attribute for the passed 
+		<var>className</var>. If <var>className</var> is found then <code>true</code> is returned otherwise
+		<code>false</code> is returned.</p>
+		
+		<h3>Examples</h3>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.on { 
+			background-color: #00ff00;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find all links
+			var links = $dom.get("a");
+			
+			// add mouse events to the links
+			for (var c=0; c&lt;links.length; c++)
+			{
+				links[c].onclick = function () {
+					$dom.toggleClass( this, "on", !$dom.hasClass(this, "on") );
+				}	
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;p&gt;Click each link to toggle its class:&lt;/p&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 4&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#"&gt;Page 5&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+	<div class="page" id="dom-transform">
+		<h2>$dom.transform</h2>
+		<h3>Syntax</h3>
+		<h4>To perform a transform</h4>
+		<pre>$dom.transform( <var>element</var>, <var>styles</var>[, <var>duration</var>, <var>callback</var>] )</pre>
+		<h4>To test if an element is transforming</h4>
+		<pre><var>isTransforming</var> = $dom.transform( <var>element</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to check.</dd>
+			<dt><var>styles</var></dt>
+			<dd>Object - The styles you wish to animate.</dd>
+			<dt><var>duration</var> [Optional]</dt>
+			<dd>Integer - Period of the transition (in milliseconds).</dd>
+			<dt><var>callback</var> [Optional]</dt>
+			<dd>Function - A function that will be called on completion/stopping of the animation.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>When testing for a transformation <var>isTransforming</var> is a <code>boolean</code> value otherwise nothing is returned.</p>
+		
+		<h3>Notes</h3>
+		<p>This method transforms the specified <var>element</var>s CSS propeties until they match those passed in the
+		<var>styles</var> parameter. The transformation occurs smoothly over the specifed <var>duration</var>.</p>
+		<p>Once an element has finished it's transformation or if <code>$dom.transform</code> is called on an element 
+		that is already animating the optional <var>callback</var> method is called.</p>
+
+		<h4>Using the callback method</h4>
+		<p>If a <var>callback</var> method is specified it will be called whenever a transformation ends. The method will 
+		be passed two parameters, the first	is a <var>boolean</var> value used to determine if the animation completed (<code>true</code>)
+		or if it was cancelled (<code>false</code>). The second parameter is the <var>element</var> that was being animated.</p>	
+		<pre>
+function( isComplete, elm )
+{
+	if (!isComplete)
+	{
+		alert("Animation Cancelled!")
+	}
+	else
+	{
+		alert("Animation Complete!")
+	}
+}		
+</pre>
+			
+
+
+		
+		<h3>Examples</h3>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		#panel { 
+			width: 150px;
+			background-color: #fd0;
+			border: 1px solid #f00;
+			line-height: 100px;
+			text-align: center;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {		
+			var panel = $dom.get("#panel")[0];
+			panel.onclick = function() {
+				$dom.transform( this, { 
+					width: "300px",
+					"border-width": "5px",
+					"line-height": "300px",
+					"opacity": 0.5
+				}, 500 )
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;div id="panel"&gt;Click me!&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<h4>Working example with callback</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		#panel { 
+			width: 150px;
+			background-color: #fd0;
+			border: 1px solid #f00;
+			line-height: 100px;
+			text-align: center;
+		}
+	&lt;/style&gt;
+
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {		
+			var panel = $dom.get("#panel")[0];
+			panel.onclick = function() {
+				$dom.transform( 
+					this, 
+					{ 
+						width: "300px",
+						"border-width": "5px",
+						"line-height": "300px",
+						"opacity": 0.5
+					}, 
+					500, 
+					function(isComplete, elm) {
+						if (isComplete)
+						{
+							alert("finished");
+						}
+					}
+				)
+			}
+		})
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;div id="panel"&gt;Click me!&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+</div>
+	<div class="page" id="dom-ancestor">
+
+		<h2>$dom.ancestor</h2>
+		<h3>Syntax</h3>
+		<pre>ancestorElement = $dom.ancestor( <var>element</var> [, <var>query</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The <code>element</code> to start from.</dd>
+			<dt><var>query</var> [Optional]</dt>
+
+			<dd>The selector string of the ancestor element you wish to find.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Returns a single <code>element</code> or <code>null</code></p>
+
+		<h3>Notes</h3>
+		<p>This function searches for the nearest ancestor of the passed <var>element</var> matching the passed <var>query</var>. 
+		If a query is not passed then the elements immediate parent is returned. If no matches were found <code>null</code> 
+		is returned.</p>
+		<h4>Supported selector formats</h4>
+
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>		
+		
+		<h3>Examples</h3>
+<pre>
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// select all links
+			var links = $dom.get("a");
+			
+			// get the first link
+			var firstLink = links[0];
+			
+			// find the immediate ancestor
+			var liElement = $dom.ancestor( firstLink );
+
+			// find the UL ancestor
+			var ulElement = $dom.ancestor( firstLink, "ul" );
+			
+			// style the ancestors
+			$dom.style( liElement, "border", "1px solid #ff0000" );
+			$dom.style( ulElement, "border", "1px solid #33ff33" );
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;	
+</pre>
+</div>
+	<div class="page" id="dom-create">
+		<h2>$dom.create</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.create( <var>selector</var> [, <var>document</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>selector</var></dt>
+			<dd>A simple selector string</dd>
+			<dt><var>document</var> [optional]</dt>
+			<dd>The <code>document</code> to create the object in - useful for working inside iframes.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A DOM node</p>
+
+		<h3>Notes</h3>
+		<p>This method will create a new DOM element based on the passed selector. A tag name must always be passed but
+		an optional ID and class list can also be defined,.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>		
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.create( "div" );
+var node = $dom.create( "div#test" );
+var node = $dom.create( "div.alt" );
+var node = $dom.create( "div#test.alt" );
+var node = $dom.create( "div#test.alt.more" );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.panel { 
+			width: 150px;
+			height: 100px;
+			border: 2px solid #000;
+		}
+		
+		.red {
+			background: #f00
+		}
+		
+		.blue {
+			background: #00f;
+		}
+	&lt;/style&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			document.body.appendChild( $dom.create( "div.panel.red" ) );
+			document.body.appendChild( $dom.create( "div.panel.blue" ) );
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;h1&gt;Test of $dom.onready&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>	
+
+<div id="footer">
+&copy;2009 Keith Clark
+</div>
+</body>
+</html>
