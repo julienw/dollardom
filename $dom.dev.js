@@ -59,7 +59,7 @@
 			};
 
     // Internet Explorer style handlers
-        if ((! "opacity" in docElt.style) && "filters" in docElt) {
+        if ((! "opacity" in _docElt.style) && "filters" in _docElt) {
             styleHandlers.opacity = {
 				    set: function (e, v) {
 				        var f = e.filters.alpha;
@@ -78,12 +78,12 @@
         }
         // should trigger in IE and in some recent clients
         // TODO : this is just plain wrong
-        if ("clientWidth" in docElt) {
+        if ("clientWidth" in _docElt) {
             styleHandlers.width = {
                 get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
             };
         }
-        if ("clientHEight" in docElt) {
+        if ("clientHEight" in _docElt) {
             styleHandlers.height = {
                 get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
 			};
