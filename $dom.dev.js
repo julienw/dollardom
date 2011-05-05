@@ -1,5 +1,5 @@
 /**
-* @preserve $dom library (v0.9.1b) copyright 2009, Keith Clark
+* $dom library (v0.9.1b) copyright 2009, Keith Clark
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
@@ -7,6 +7,7 @@
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
+; // empty statement to make uglify remove the following comments
 /*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true */
 /* future jshint options : nomen: true */
 /* undef options seems buggy */
