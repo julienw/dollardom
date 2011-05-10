@@ -7,11 +7,12 @@
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
-; // empty statement to make uglify remove the following comments
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true */
-/* future jshint options : nomen: true */
-/* undef options seems buggy */
 (function (window)
+/* options for jshint are here because uglifyjs needs a real piece of code between the comments
+ * it keeps and the comments it removes */
+/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef : true */
+/* future jshint options : nomen: true */
+/* undef options seems buggy, we use latedef */
 {
     var 
     /* these references exist to reduce size in minifiers */
