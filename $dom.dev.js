@@ -85,7 +85,7 @@
                 get: function (e) { return e.style.width || e.clientWidth || e.offsetWidth; }
             };
         }
-        if ("clientHEight" in _docElt) {
+        if ("clientHeight" in _docElt) {
             styleHandlers.height = {
                 get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
 			};
