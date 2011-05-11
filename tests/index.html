@@ -13,8 +13,17 @@
   <script type="text/javascript" src="spec/SpecHelper.js"></script>
   <script type="text/javascript" src="spec/$domSpec.js"></script>
 
+  <style>
+      #tests {
+          display: none;
+      }
+  </style> 
 </head>
 <body>
+
+    <div id='tests'>
+    </div>
+
 <script type="text/javascript">
   jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
   jasmine.getEnv().execute();
