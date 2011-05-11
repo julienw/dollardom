@@ -349,7 +349,9 @@
         }
         for (var c = 0; c < classNames.length; c++)
         {
-            if (_hasClass(elm, classNames[c])) { return _false; }
+            if (!_hasClass(elm, classNames[c])) {
+                return _false;
+            }
         }
         return _true;
     }
