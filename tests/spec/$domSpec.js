@@ -15,19 +15,38 @@ describe("$dom", function() {
     expect($dom).toBeDefined();
   });
 
-  describe("getting elements", function() {
-    it("should get elements by ID", function() {
+  describe("get", function() {
+    it("by ID", function() {
         var nodes = $dom.get("#tests");
         expect(nodes.length).toEqual(1);
         expect(nodes).toContain(testElements.tests);
+        expect(nodes).not.toContainM(testElements.level1, testElements.level2, testElements.sib2, testElements.sib3);
     });
 
-    it("should get elements by class", function() {
+    it("by class", function() {
         var nodes = $dom.get(".level1");
         expect(nodes.length).toEqual(3);
+        expect(nodes).toContainM(testElements.level1, testElements.sib2, testElements.sib3);
+        expect(nodes).not.toContainM(testElements.level2);
+    });
+
+    it("by tag and multiple", function() {
+        var nodes = $dom.get('span.level1');
+        expect(nodes.length).toEqual(2);
+        expect(nodes).toContainM(testElements.sib2, testElements.sib3);
+        expect(nodes).not.toContainM(testElements.sib1, testElements.level1);
+    });
+
+    it("by direct children", function() {
+        var nodes = $dom.get('#tests > div');
+        expect(nodes.length).toEqual(1);
         expect(nodes).toContain(testElements.level1);
-        expect(nodes).toContain(testElements.sib2);
-        expect(nodes).toContain(testElements.sib3);
+        expect(nodes).not.toContainM(testElements.level2);
+    });
+    it("by descendants", function() {
+        var nodes = $dom.get('#tests div');
+        expect(nodes.length).toEqual(2);
+        expect(nodes).toContainM(testElements.level1, testElements.level2);
     });
   });
 
