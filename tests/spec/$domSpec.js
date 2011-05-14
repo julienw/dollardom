@@ -48,13 +48,71 @@ describe("$dom", function() {
         expect(nodes.length).toEqual(2);
         expect(nodes).toContainM(testElements.level1, testElements.level2);
     });
+    it("by adjacent", function() {
+        var nodes = $dom.get('.sib1 + span');
+        expect(nodes.length).toEqual(1);
+        expect(nodes).toContain(testElements.sib2);
+    });
+    it("by sibling", function() {
+        var nodes = $dom.get('.sib1 ~ span');
+        expect(nodes.length).toEqual(2);
+        expect(nodes).toContain(testElements.sib2, testElements.sib3);
+    });
+  });
+
+  describe("create", function() {
+    it("can create elements", function() {
+        var newNode = $dom.create('div');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+    });
+    it("can create elements with class", function() {
+        var newNode = $dom.create('div.element');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+        expect(newNode.className).toEqual("element");
+    });
+    it("can create elements with classes", function() {
+        var newNode = $dom.create('div.element.class');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+        expect(newNode.className).toMatch(/\belement\b/);
+        expect(newNode.className).toMatch(/\bclass\b/);
+    });
+    it("can create elements with id", function() {
+        var newNode = $dom.create('div#element');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+        expect(newNode.id).toEqual("element");
+    });
+    it("can create elements with id and class", function() {
+        var newNode = $dom.create('div#element.class');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+        expect(newNode.id).toEqual("element");
+        expect(newNode.className).toEqual("class");
+    });
+    it("can create elements with class and id", function() {
+        var newNode = $dom.create('div.class#element');
+        expect(newNode instanceof Element).toBeTruthy();
+        expect(newNode.localName).toEqual("div");
+        expect(newNode.id).toEqual("element");
+        expect(newNode.className).toEqual("class");
+    });
   });
 
   describe("manipulating CSS", function() {
-      it("should find classes", function() {
+      it("hasClass", function() {
           expect($dom.hasClass(testElements.level1, "level1")).toBeTruthy();
+          expect($dom.hasClass(testElements.level1, "sib1")).toBeTruthy();
           expect($dom.hasClass(testElements.sib2, "level1")).toBeTruthy();
           expect($dom.hasClass(testElements.sib2, "sib2")).toBeTruthy();
+      });
+      it("addClass", function() {
+          $dom.addClass(testElements.level1, "test");
+          expect(testElements.level1.className).toMatch(/\btest\b/);
+          expect(testElements.level1.className).toMatch(/\blevel1\b/);
+          expect(testElements.level1.className).toMatch(/\bsib1\b/);
       });
   });
 });
