@@ -25,8 +25,8 @@
 
     /* dom vars */
 		re_css_property = /^(.*?)(px|deg)?$/,
-		re_selector_fragment = /^\s*([>+~])?\s*([*a-z0-9\-_]+)?(?:#([a-z0-9\-_]+))?(?:\.([a-z0-9\.\-_]+))?\s*/i,
-        re_get_alias = /\-(\w)/g,
+		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/i,
+        re_get_alias = /-(\w)/g,
 		loadHandlers = [],
         ieEvents = [],
 
@@ -227,7 +227,7 @@
                 return Array.prototype.slice.call(nodes);
             } catch (e) {
                 var arr = [];
-                for (var i = 0; i < nodes.length; i++) {
+                for (var i = 0, l = nodes.length; i < l; i++) {
                     arr.push(nodes[i]);
                 }
                 return arr;
@@ -504,13 +504,15 @@
 
      function _create(selector, doc) {
          var s = _sel(selector)[0],
-             e = (doc || _document).createElement(s.tag);
-        if (s.id) {
-            e.id = s.id;
+             e = (doc || _document).createElement(s.tag),
+             id = s.id,
+             classes = s.classes;
+        if (id) {
+            e.id = id;
         }
         
-        if (s.classes) {
-            e.className = s.classes.join(" ");
+        if (classes) {
+            e.className = classes.join(" ");
         }
         return e;
      }
