@@ -2,7 +2,7 @@ describe("$dom", function() {
   var testElements = {};
   beforeEach(function() {
       var testsElt = document.getElementById("tests");
-      testsElt.innerHTML = "<div class='level1 sib1'><div class='level2'></div></div><span class='level1 sib2'></span><span class='level1 sib3'></span>";
+      testsElt.innerHTML = "<div class='level1 sib1'><div class='level2'></div></div><span class='level1 sib2' id='middle'></span><span class='level1 sib3'></span>";
       testElements = {
           tests : testsElt,
           level1 : testsElt.firstChild,
@@ -30,11 +30,31 @@ describe("$dom", function() {
         expect(nodes).not.toContainM(testElements.level2);
     });
 
-    it("by tag and multiple", function() {
+    it("by tag and class", function() {
         var nodes = $dom.get('span.level1');
         expect(nodes.length).toEqual(2);
         expect(nodes).toContainM(testElements.sib2, testElements.sib3);
         expect(nodes).not.toContainM(testElements.sib1, testElements.level1);
+    });
+    it("by multiple class", function() {
+        var nodes = $dom.get('.level1.sib2');
+        expect(nodes.length).toEqual(1);
+        expect(nodes).toContain(testElements.sib2);
+    });
+    it("by tag and id", function() {
+        var nodes = $dom.get('span#middle');
+        expect(nodes.length).toEqual(1);
+        expect(nodes).toContain(testElements.sib2);
+    });
+    it("by id and class", function() {
+        var nodes = $dom.get('#middle.sib2');
+        expect(nodes.length).toEqual(1);
+        expect(nodes).toContain(testElements.sib2);
+    });
+    it("by class and id", function() {
+        var nodes = $dom.get('.sib2#middle');
+        expect(nodes.length).toEqual(1);
+        expect(nodes).toContain(testElements.sib2);
     });
 
     it("by direct children", function() {
