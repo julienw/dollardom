@@ -7,6 +7,7 @@ describe("$dom", function() {
           tests : testsElt,
           level1 : testsElt.firstChild,
           level2 : testsElt.firstChild.firstChild,
+          sib1: testsElt.firstChild,
           sib2: testsElt.firstChild.nextSibling,
           sib3: testsElt.firstChild.nextSibling.nextSibling
       };
@@ -121,6 +122,19 @@ describe("$dom", function() {
     });
   });
 
+  describe("first", function() {
+      it("find first", function() {
+          var node = $dom.first(testElements.sib3);
+          expect(node).toBe(testElements.sib1);
+      });
+  });
+
+  describe("last", function() {
+      it("find last", function() {
+          var node = $dom.last(testElements.sib1);
+          expect(node).toBe(testElements.sib3);
+      });
+  });
   describe("manipulating CSS", function() {
       it("hasClass", function() {
           expect($dom.hasClass(testElements.level1, "level1")).toBeTruthy();
