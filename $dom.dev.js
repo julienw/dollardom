@@ -174,12 +174,11 @@
             while (selector)
             {
                 f = selector.match(re_selector_fragment);
-                if (f[0] === "") {
-                    return null;
+                if (f[0] === "") { // matched no selector
+                    break;
                 }
                 out.push({
                     rel: f[1],
-                    tag: f[2],
                     uTag: (f[2] || "").toUpperCase(),
                     id: f[3],
                     classes: (f[4]) ? f[4].split(".") : _undefined
@@ -207,7 +206,7 @@
         {
             var c, results = selectorFragment.id ?
 				((c = ((elm && elm.ownerDocument) || _document).getElementById(selectorFragment.id)) && _isDescendant(c, elm)) ? [c] : [] :
-				toArray(elm.getElementsByTagName(selectorFragment.tag ? selectorFragment.uTag : "*"));
+				toArray(elm.getElementsByTagName(selectorFragment.uTag || "*"));
             c = results.length;
 
             if (c > 0 && (selectorFragment.id || selectorFragment.classes)) {
@@ -327,17 +326,19 @@
 
     function _match(elm, selector)
     {
+        var tag = selector.uTag,
+            id = selector.id,
+            classes = selector.classes;
+
         return (elm.nodeType === 1 && selector) &&
-		!(selector.tag && selector.uTag != elm.tagName) &&
-		!(selector.id && selector.id != elm.id) &&
-		!(selector.classes && !_hasClasses(elm, selector.classes));
+		!(tag && tag != elm.tagName) &&
+		!(id && id != elm.id) &&
+		!(classes && !_hasClasses(elm, classes));
     }
 
     function _find(elm, property, selectorFragment)
     {
-        selectorFragment = _sel(selectorFragment);
-		//if(selectorFragment===_undefined || !selectorFragment.tag)selectorFragment = _sel(selectorFragment);
-        selectorFragment = selectorFragment.length > 0 ? selectorFragment[0] : null;
+        selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
         while (elm && (elm = elm[property]) && (selectorFragment ? (!_match(elm, selectorFragment)) : (elm.nodeType != 1))) { }
         return elm;
     }
@@ -504,7 +505,11 @@
 
      function _create(selector, doc) {
          var s = _sel(selector)[0],
-             e = (doc || _document).createElement(s.tag),
+             tag = s.uTag;
+         if (! tag) {
+             return null;
+         }
+         var e = (doc || _document).createElement(tag),
              id = s.id,
              classes = s.classes;
         if (id) {
