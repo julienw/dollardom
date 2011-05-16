@@ -2,11 +2,12 @@ describe("$dom", function() {
   var testElements = {};
   beforeEach(function() {
       var testsElt = document.getElementById("tests");
-      testsElt.innerHTML = "<div class='level1 sib1'><div class='level2'></div></div><span class='level1 sib2' id='middle'></span><span class='level1 sib3'></span>";
+      testsElt.innerHTML = "<div class='level1 sib1'><div class='level2'><span class='level3'></span></div></div><span class='level1 sib2' id='middle'></span><span class='level1 sib3'></span>";
       testElements = {
           tests : testsElt,
           level1 : testsElt.firstChild,
           level2 : testsElt.firstChild.firstChild,
+          level3 : testsElt.firstChild.firstChild.firstChild,
           sib1: testsElt.firstChild,
           sib2: testsElt.firstChild.nextSibling,
           sib3: testsElt.firstChild.nextSibling.nextSibling
@@ -129,6 +130,7 @@ describe("$dom", function() {
       });
       it("find first tag", function() {
           var node = $dom.first(testElements.sib3, "span");
+          console.log(node);
           expect(node).toBe(testElements.sib2);
       });
       it("find first class", function() {
@@ -183,6 +185,29 @@ describe("$dom", function() {
           expect(node).toBe(null);
       });
   });
+  describe("ancestor", function() {
+      it("find nearest ancestor", function() {
+          var node = $dom.ancestor(testElements.level3);
+          expect(node).toBe(testElements.level2);
+      });
+      it("find nearest ancestor with class", function() {
+          var node = $dom.ancestor(testElements.level3, '.level1');
+          expect(node).toBe(testElements.level1);
+      });
+      it("find nearest ancestor with id", function() {
+          var node = $dom.ancestor(testElements.level3, '#tests');
+          expect(node).toBe(testElements.tests);
+      });
+      it("find nothing by ancestor", function() {
+          var node = $dom.ancestor(testElements.level3, '.nonexistent');
+          expect(node).toBe(null);
+      });
+      it("find ancestor by tag", function() {
+          var node = $dom.ancestor(testElements.level3, 'body');
+          expect(node).toBe(document.body);
+      });
+  });
+
   describe("manipulating CSS", function() {
       it("hasClass", function() {
           expect($dom.hasClass(testElements.level1, "level1")).toBeTruthy();
