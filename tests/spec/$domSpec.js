@@ -127,12 +127,60 @@ describe("$dom", function() {
           var node = $dom.first(testElements.sib3);
           expect(node).toBe(testElements.sib1);
       });
+      it("find first tag", function() {
+          var node = $dom.first(testElements.sib3, "span");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find first class", function() {
+          var node = $dom.first(testElements.sib1, ".sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find first id", function() {
+          var node = $dom.first(testElements.sib3, "#middle");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find first tag and class", function() {
+          var node = $dom.first(testElements.sib3, "span.sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find first multiple classes", function() {
+          var node = $dom.first(testElements.sib3, ".level1.sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find first nothing", function() {
+          var node = $dom.first(testElements.sib3, ".nonexistent");
+          expect(node).toBe(null);
+      });
   });
 
   describe("last", function() {
       it("find last", function() {
           var node = $dom.last(testElements.sib1);
           expect(node).toBe(testElements.sib3);
+      });
+      it("find last tag", function() {
+          var node = $dom.last(testElements.sib3, "div");
+          expect(node).toBe(testElements.sib1);
+      });
+      it("find last class", function() {
+          var node = $dom.last(testElements.sib1, ".sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find last id", function() {
+          var node = $dom.last(testElements.sib3, "#middle");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find last tag and class", function() {
+          var node = $dom.last(testElements.sib3, "span.sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find last multiple classes", function() {
+          var node = $dom.last(testElements.sib3, ".level1.sib2");
+          expect(node).toBe(testElements.sib2);
+      });
+      it("find last nothing", function() {
+          var node = $dom.last(testElements.sib3, ".nonexistent");
+          expect(node).toBe(null);
       });
   });
   describe("manipulating CSS", function() {
