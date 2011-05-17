@@ -324,13 +324,22 @@
     }
 
 
+    /**
+     * return false if elm is not an Element.
+     * if selector is undefined/null, then we always match (unless elm is not an Element)
+     * otherwise we try to match the selector
+     */
     function _match(elm, selector)
     {
+        if (!selector) {
+            return true;
+        }
+
         var tag = selector.uTag,
             id = selector.id,
             classes = selector.classes;
 
-        return (elm.nodeType === 1 && selector) &&
+        return (elm.nodeType === 1) &&
 		!(tag && tag != elm.tagName) &&
 		!(id && id != elm.id) &&
 		!(classes && !_hasClasses(elm, classes));
@@ -339,7 +348,7 @@
     function _find(elm, property, selectorFragment)
     {
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
-        while (elm && (elm = elm[property]) && (selectorFragment ? (!_match(elm, selectorFragment)) : (elm.nodeType != 1))) { }
+        while (elm && (elm = elm[property]) && (!_match(elm, selectorFragment))) { }
         return elm;
     }
 
