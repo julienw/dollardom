@@ -348,8 +348,12 @@
     function _find(elm, property, selectorFragment)
     {
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
-        while (elm && (elm = elm[property]) && (!_match(elm, selectorFragment))) { }
+        while (elm && (!_match(elm, selectorFragment)) && (elm = elm[property])) { }
         return elm;
+    }
+
+    function _findNext(elm, property, selectorFragment) {
+        return _find(elm[property], property, selectorFragment);
     }
 
     function _hasClasses(elm, classNames)
@@ -540,23 +544,23 @@
     }
 
     function _ancestor(elm, selector) {
-        return _find(elm, "parentNode", selector);
+        return _findNext(elm, "parentNode", selector);
     }
     function _next(elm, selector) {
-        return _find(elm, "nextSibling", selector);
+        return _findNext(elm, "nextSibling", selector);
     }
 
     function _previous(elm, selector) {
-        return _find(elm, "previousSibling", selector);
+        return _findNext(elm, "previousSibling", selector);
     }
 
     function _first(elm, selector) {
-        var p = elm.parentNode;
-        return _find(p, "firstChild", selector) || _next(p.firstChild, selector);
+        elm = elm.parentNode.firstChild;
+        return _find(elm, "nextSibling", selector);
     }
     function _last(elm, selector) {
-        var p = elm.parentNode;
-        return _find(p, "lastChild", selector) || _previous(p.lastChild, selector);
+        elm = elm.parentNode.lastChild;
+        return _find(elm, "previousSibling", selector);
     }
 
     function _hasClass(elm, className) {
