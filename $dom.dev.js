@@ -10,7 +10,7 @@
 (function (window)
 /* options for jshint are here because uglifyjs needs a real piece of code between the comments
  * it keeps and the comments it removes */
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef : true */
+/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true */
 /* future jshint options : nomen: true */
 /* undef options seems buggy, we use latedef */
 {
