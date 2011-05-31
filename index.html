@@ -6,64 +6,79 @@
   <title>julienw/dollardom @ GitHub</title>
 
   <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #174102;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
+  body, html {
+      background-color: white;
+      font-family: Helvetica, Arial, FreeSans, sans-serif;
+      color: black;
+      margin: 0;
+      padding: 0;
+  }
+
+  #container {
       margin: 0 auto;
+      padding: 1em;
       width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #e8befd; margin-bottom: 3px; }
+      border-left: 1px solid #333;
+      border-right: 1px solid #333;
+  }
+
+  #header {
+      background-color: #006633;
+      background-image: -moz-linear-gradient(#006610, #004405);
+      color: white;
+      padding: .5em 1em 1em 1em;
+  }
+
+  h1, h2, h3 {
+      padding: 0;
+      margin: 0;
+  }
+
+    h1 { font-size: 3.8em}
     h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #e8befd; }
-    h3 { text-align: center; color: #e8befd; }
-    a { color: #e8befd; }
+    h1 a { color: white }
+    h2 { font-size: 1.5em }
+    h3 { text-align: center }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    pre {
+        background: #000;
+        background-image: -moz-linear-gradient(#333, black);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(black));
+        background-image: -webkit-linear-gradient(#333, black);
+        background-image: -ms-linear-gradient(#333, black);
+        background-image: -o-linear-gradient(#333, black);
+        background-image: linear-gradient(#333, black);
+        color: #fff;
+        padding: 1em;
+        margin: 0 -1.4em;
+    }
     .footer { text-align:center; padding-top:30px; font-style: italic; }
   </style>
 </head>
 
 <body>
-  <a href="http://github.com/julienw/dollardom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+    <a href="http://github.com/julienw/dollardom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
 
-  <div id="container">
 
-    <div class="download">
-      <a href="http://github.com/julienw/dollardom/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/julienw/dollardom/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
+    <div id='header'>
     <h1><a href="http://github.com/julienw/dollardom">dollardom</a>
       <span class="small">by <a href="http://github.com/julienw">julienw</a></span></h1>
 
     <div class="description">
       A 5k Javascript library for selecting, styling, traversing and animating DOM elements.
-    </div>
+  </div>
+  </div>
 
+  <div id="container">
+      <h2>Documentation</h2>
+      <p>Documentation is available <a href='doc/'>on a separate page</a>.</p>
     <h2>License</h2>
 <p>Expat (BSD-like)</p>
-<h2>Authors</h2>
-<p>Julien Wajsberg (felash@gmail.com)<br/>Keith Clark<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Julien Wajsberg (felash@gmail.com)<br/>      </p>
 
 
     <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/julienw/dollardom/zipball/master">zip</a> or
-      <a href="http://github.com/julienw/dollardom/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+    <p>You can clone the project with <a href="http://git-scm.com">Git</a>
       by running:
       <pre>$ git clone git://github.com/julienw/dollardom</pre>
     </p>
