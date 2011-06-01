@@ -1,5 +1,5 @@
 /**
-* $dom library (v0.9.1b) copyright 2009, Keith Clark
+* $dom library (v0.9.1b) copyright 2009, 2010, 2011 Keith Clark
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
