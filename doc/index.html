@@ -36,42 +36,40 @@
 	</style>
 	<script type="text/javascript" src="../$dom.min.js"></script>
 	<script>
-		$dom.onready( function()
-		{
+		$dom.onready( function() {
 			var links = $dom.get("#tree>ul>li>a");
-			var pages = $dom.get("#pages>div");
-			
-			for (var c=0;c<links.length;c++)
-			{
-				links[c].onclick = function()
-				{
-					showPage( this.href ); 
-					return false
-				}
-			}
+            var pages = $dom.get("#pages>div");
 
+            var tree = document.getElementById('tree');
+            $dom.addEvent(tree, 'click', function(e) {
+                var target = e.target;
+                e.preventDefault();
+
+                if ($dom.is(target, 'a')) {
+                    showPage(target.href);
+                }
+            });
+			
 			function getHash(url)
 			{
-				var hashPos = url.indexOf("#")
-				return (hashPos>0) ? url.substring(hashPos+1) : ""
+				var hashPos = url.indexOf("#");
+				return (hashPos>0) ? url.substring(hashPos+1) : "";
 			}
 
 			function showPage( url )
 			{
-				var id = getHash( url )
-				for (var c=0;c<pages.length;c++)
-				{
-					$dom.toggleClass(pages[c], "inactive", pages[c].id != id )
+                var id = getHash( url );
+                var c, l;
+				for (c = 0, l = pages.length;c < l; c++) {
+					$dom.toggleClass(pages[c], "inactive", pages[c].id != id );
 				}
-				for (var c=0;c<links.length;c++)
-				{
-					$dom.toggleClass(links[c], "active", getHash(links[c].href) == id )
+				for (c = 0, l = links.length; c < l; c++) {
+					$dom.toggleClass(links[c], "active", getHash(links[c].href) == id );
 				}
-				document.documentElement.scrollTop = 0
+				document.documentElement.scrollTop = 0;
 			}
-			showPage( document.location.href )
-
-		})
+			showPage( document.location.href );
+		});
 	</script>
 </head>
 <body>
@@ -131,10 +129,13 @@
         <ul>
             <li>project hosted on github</li>
             <li>fixed a bug when the Array prototype was modified</li>
+            <li>fixed a bug where 'first' and 'last' were incorrect</li>
             <li>Removed isIE variable -- now we do feature sniffing instead</li>
             <li>Reorganized somewhat the code</li>
             <li>resolved jshint error reports</li>
             <li>now we compress with uglifyjs</li>
+            <li>added 'is', 'empty' functions</li>
+            <li>event object now has preventDefault and stopPropagation on IE</li>
         </ul>
 		<h4>v0.9.1b</h4>
 		<ul>

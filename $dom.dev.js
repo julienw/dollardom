@@ -99,7 +99,17 @@
             function (elm, name, handler)
             {
                 var eventKey = elm.uniqueID + name + handler;
-                ieEvents[eventKey] = function () { var e = window.event; e.target = e.srcElement; handler(e); };
+                ieEvents[eventKey] = function () {
+                    var e = window.event;
+                    e.target = e.srcElement;
+                    e.preventDefault = function() {
+                        e.returnValue = true;
+                    };
+                    e.stopPropagation = function() {
+                        e.cancelBubble = true;
+                    };
+                    handler(e);
+                };
                 elm.attachEvent("on" + name, ieEvents[eventKey]);
             },
 
@@ -190,7 +200,7 @@
     }
 
 
-    // determines if the passed element is a descentand of anthor element
+    // determines if the passed element is a descendant of anthor element
     function _isDescendant(elm, ancestor)
     {
         while ((elm = elm.parentNode) && elm != ancestor) { }
@@ -350,6 +360,11 @@
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
         while (elm && (!_match(elm, selectorFragment)) && (elm = elm[property])) { }
         return elm;
+    }
+
+    function _is(elm, selectorFragment) {
+        selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
+        return elm && _match(elm, selectorFragment);
     }
 
     function _findNext(elm, property, selectorFragment) {
@@ -583,6 +598,12 @@
         (expr ? _addClass : _removeClass)(elm, className);
     }
 
+    function _empty(elm) {
+        while (elm.firstChild) {
+            elm.removeChild(elm.firstChild);
+        }
+    }
+
 
     var dom = {
 	    /* -- Experimental methods --*/
@@ -594,7 +615,7 @@
 	    addEvent: _addEvent,
 	    removeEvent: _removeEvent,
 
-	    /* selections */
+	    /* dom manipulations */
 	    get: _get,
 	    descendants: _descendants,
 	    ancestor: _ancestor,
@@ -602,6 +623,8 @@
 	    previous: _previous,
 	    first: _first,
 	    last: _last,
+        empty: _empty,
+        is: _is,
 
 	    /* styling */
 	    hasClass: _hasClass,
