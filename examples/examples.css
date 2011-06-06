@@ -1,0 +1,19 @@
+.has-js #message-no-js {
+	display: none;
+}
+
+.panel {
+	width: 70px;
+	height: 50px;
+}
+
+.red {
+	background-color: #d00;
+	border: 1px solid #800;
+}
+
+pre {
+	background-color: #eee;
+	border-left: 2px solid #bbb;
+	padding: .2em .5em;
+}
