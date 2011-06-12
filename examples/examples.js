@@ -18,5 +18,20 @@ function setupExamples() {
 		var node = $dom.create('div.panel.red');
 		result.appendChild(node);
 	});
+	
+	button = document.getElementById('animate');
+	$dom.addEvent(button, 'click', function() {
+		var result = $dom.next(button, ".result");
+		var square = $dom.first(result.firstChild, ".square");
+		
+		$dom.transform(square, { left: "150px" });
+	});
+	button = document.getElementById('animate-reset');
+	$dom.addEvent(button, 'click', function() {
+		var result = $dom.next(button, ".result");
+		var square = $dom.first(result.firstChild, ".square");
+		
+		$dom.style(square, "left", 0);
+	});
 		
 }
