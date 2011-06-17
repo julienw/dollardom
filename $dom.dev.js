@@ -21,9 +21,11 @@
 		_true = true,
 		_false = false,
 		_undefined,
-		animTimer, time, animItems = [],
+		time, animItems = [],
 
     /* dom vars */
+		// we don't support relative units for animation on purpose, because
+		// it's difficult to get it right : computedStyle comes in absolute units
 		re_css_property = /^(.*?)(px|deg)?$/,
 		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/i,
         re_get_alias = /-(\w)/g,
@@ -385,32 +387,81 @@
         return _true;
     }
 
+    // Paul Irish's requestAnimationFrame shim
+    // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+    var requestAnimFrame = window.requestAnimationFrame || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     ||
+              function(/* function */ callback /*, DOMElement element */){
+                window.setTimeout(function() { callback(); }, 16);
+              };
 
-    function _removeAnim(index, fin)
-    {
+    function _removeAnim(index, fin) {
         var item = animItems.splice(index, 1)[0];
-        if (typeof item.callback === "function")
-        {
-            item.callback(fin, item.elm);
-        }
+        
+        item.callback && item.callback(fin, item.elm);
     }
+    
+    function _timerAnim(timestamp) {
+		timestamp = timestamp || +new Date(); // Chrome 10 and the shim function give no time argument
+		for (var c = animItems.length - 1; c >= 0; c--)	{
+			var	prop, style,
+				styles = {},
+				anim = animItems[c],
+				duration = anim.duration,
+				props = anim.properties,
+				ticks = timestamp - anim.startTime,
+				ref = 0.5 - (Math.cos(ticks / duration * (Math.PI)) / 2);
 
-    function _anim(elm, properties, duration, callback)
-    {
+			for (prop in props)	{
+				style = props[prop];
+/*					
+				styles[prop] = Number(ticks >= duration ?
+						style.e :
+						style.s > style.e ?
+							style.e + (style.s - style.e) * (1 - ref) : // going backward
+							style.s + (style.e - style.s) * ref  // going forward
+						).toFixed(2) + style.u;
+*/
+				styles[prop] = "" + (ticks >= duration ?
+						style.e :
+						style.s + (style.e - style.s) * ref
+						) + style.u;
+			
+				if (styles[prop] == "NaNpx") {
+					styles[prop] = 0;
+				}
+			}
+			console.log("styling to ", styles);
+			_style(anim.elm, styles);
+
+			if (ticks >= duration) {
+				_removeAnim(c, _true);
+			}
+		}
+
+		if (animItems.length) {
+			requestAnimFrame(_timerAnim);
+		}
+	}
+
+
+    function _anim(elm, properties, duration, callback) {
         var property, props = [], s, e, i = -1, c;
 
-        for (c = animItems.length - 1; c >= 0; c--)
-        {
-            if (animItems[c].elm == elm)
-            {
+        for (c = animItems.length - 1; c >= 0; c--) {
+            if (animItems[c].elm == elm) {
                 i = c; break;
             }
         }
 
         if (properties === _undefined) {
-            return i > -1;
+            return i > -1; // means an animation is running
         }
         if (i > -1) {
+			// if it was already animating, then we stop the last animation
             _removeAnim(i, _false);
         }
 
@@ -419,56 +470,26 @@
         }
 
 
-        for (property in properties)
-        {
-            s = re_css_property.exec(_style(elm, property));
-            e = re_css_property.exec(properties[property]);
-            props[property] = { s: parseFloat(s[1]), e: parseFloat(e[1]), u: s[2] || e[2] || "" };
+        for (property in properties) {
+            s = re_css_property.exec(_style(elm, property)); // current style
+            e = re_css_property.exec(properties[property]); // style to be
+            props[property] = {
+				s: parseFloat(s[1]),
+				e: parseFloat(e[1]),
+				// we use s[2] only if the user didn't put any unit in the command
+				u: e[2] || s[2] || ""
+			};
         }
 
-        animItems.push({ elm: elm, startTime: new Date(), properties: props, callback: callback, duration: duration });
+        animItems.push({
+			elm: elm,
+			startTime: +new Date(),
+			properties: props,
+			callback: callback,
+			duration: duration
+		});
 
-        if (!animTimer)
-        {
-            animTimer = window.setInterval(function ()
-            {
-                for (var c = animItems.length - 1; c >= 0; c--)
-                {
-                    var styles = {},
-					prop,
-					style,
-					anim = animItems[c],
-                    duration = anim.duration,
-					ticks = new Date() - anim.startTime,
-					ref = 1 - (0.5 - (Math.cos(ticks / duration * (Math.PI)) / 2));
-
-                    for (prop in anim.properties)
-                    {
-                        style = anim.properties[prop];
-                        styles[prop] = Number(ticks >= duration ?
-								style.e :
-								style.s > style.e ?
-									style.e + (style.s - style.e) * ref :
-									style.s + (style.e - style.s) * (1 - ref)).toFixed(2) + style.u;
-
-                        if (styles[prop] == "NaNpx") {
-                            styles[prop] = "0";
-                        }
-                    }
-                    _style(anim.elm, styles);
-
-                    if (ticks >= duration)
-                    {
-                        _removeAnim(c, _true);
-                    }
-                }
-
-                if (!animItems.length)
-                {
-                    animTimer = window.clearInterval(animTimer);
-                }
-            }, 10);
-        }
+		requestAnimFrame(_timerAnim);
     }
 
 
