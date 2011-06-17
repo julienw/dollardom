@@ -24,14 +24,14 @@ function setupExamples() {
 		var result = $dom.next(button, ".result");
 		var square = $dom.first(result.firstChild, ".square");
 		
-		$dom.transform(square, { left: "150px" });
+		$dom.transform(square, { left: "150px", opacity: 0.2 });
 	});
 	button = document.getElementById('animate-reset');
 	$dom.addEvent(button, 'click', function() {
 		var result = $dom.next(button, ".result");
 		var square = $dom.first(result.firstChild, ".square");
 		
-		$dom.style(square, "left", 0);
+		$dom.transform(square, { left: 0, opacity: 1 });
 	});
 		
 }
