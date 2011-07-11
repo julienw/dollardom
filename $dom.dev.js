@@ -401,7 +401,9 @@
     function _removeAnim(index, fin) {
         var item = animItems.splice(index, 1)[0];
         
-        item.callback && item.callback(fin, item.elm);
+        if (item.callback) {
+            item.callback(fin, item.elm);
+        }
     }
     
     function _timerAnim(timestamp) {
@@ -546,7 +548,7 @@
                 toplevel = (window.frameElement === null);
             } catch(e) {}
 
-            if (!toplevel && _docElt.doScroll) {
+            if (toplevel && _docElt.doScroll) {
                 scrollCheck();
             }
         }
