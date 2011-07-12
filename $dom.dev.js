@@ -436,7 +436,6 @@
 					styles[prop] = 0;
 				}
 			}
-			console.log("styling to ", styles);
 			_style(anim.elm, styles);
 
 			if (ticks >= duration) {
