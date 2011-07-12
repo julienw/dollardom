@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<title>$dom examples</title>
+	<link rel='stylesheet' href='sh_style.css' />
+	<link rel='stylesheet' href='examples.css' />
+</head>
+<body class='no-js'>
+	<p id='message-no-js'>This page needs Javascript to work.</p>
+	
+	<h1>Create an element</h1>
+	<pre class='sh_javascript_dom'>/* The 'panel' class sets width and height.
+   The 'red' class sets border and background color. */
+var node = $dom.create('div.panel.red');
+document.body.appendChild(node);</pre>
+	<button id='create'>Execute this code !</button>
+	<div class='result'></div>
+	
+	<h1>Animate</h1>
+	<pre class='sh_javascript_dom'>// "square" is the red squared absolute-positioned div
+$dom.transform(square, { left: "150px", opacity: 0.2 });</pre>
+	<button id='animate'>Execute this code !</button>
+	<button id='animate-reset'>Go back !</button>
+	<div class='result'>
+		<div class='square red absolute'></div>
+	</div>
+		
+	
+	<script src='../$dom.dev.js'></script>
+	<script src='sh_main.min.js'></script>
+	<script src='sh_javascript_dom.min.js'></script>
+	<script src='examples.js'></script>
+</body>
+</html>
