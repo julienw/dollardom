@@ -63,7 +63,7 @@
 			};
 
     // Internet Explorer style handlers
-        if ((! "opacity" in _docElt.style) && "filters" in _docElt) {
+        if (! ("opacity" in _docElt.style) && ("filters" in _docElt)) {
             styleHandlers.opacity = {
 				    set: function (e, v) {
 				        var f = e.filters.alpha;
