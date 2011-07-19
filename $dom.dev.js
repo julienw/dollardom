@@ -475,8 +475,8 @@
             s = re_css_property.exec(_style(elm, property)); // current style
             e = re_css_property.exec(properties[property]); // style to be
             props[property] = {
-				s: parseFloat(s[1]),
-				e: parseFloat(e[1]),
+				s: parseFloat(s[1]) || 0,
+				e: parseFloat(e[1]) || 0,
 				// we use s[2] only if the user didn't put any unit in the command
 				u: e[2] || s[2] || ""
 			};
