@@ -8,10 +8,14 @@ FAQ
 ---
 
 ### Which version to download ?
-$dom.dev.js is always the most up to date version. It is currently facing big changes, especially in its Internet
+`$dom.dev.js` is always the most up to date version. It is currently facing big changes, especially in its Internet
 Explorer support, but should work. Please report any bug you find.
 
-I'll try to keep $dom.min.js (minified with uglifyjs) in sync but take attention to the timestamp to be sure.
+I'll try to keep `$dom.min.js` (minified with `uglifyjs`) in sync but take attention to the timestamp to be sure.
+
+If you want animation support, include either both `$dom.dev.js` and `$dom-animate.dev.js`
+or their concatened/minified version `$dom-with-animate.min.js`. Please note however that nowadays, animation
+should be done using CSS.
 
 ### Why ?
 I used $dom in a project and wanted to fix one bug. Moreover Keith Clark stopped maintaining this code
