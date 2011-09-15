@@ -85,9 +85,57 @@
             });
             return this;
         },
+        first: function(sel) {
+			this.a = map(this.a, function(elt) {
+				return $dom.first(elt, sel);
+			});
+			return this;
+		},
+        last: function(sel) {
+			this.a = map(this.a, function(elt) {
+				return $dom.last(elt, sel);
+			});
+			return this;
+		},
+		empty: function() {
+			each(this.a, function(elt) {
+                $dom.empty(elt);
+            });
+            return this;
+		},
         is: function(sel) {
             return this.a.length && $dom.is(this.a[0], sel);
-        }
+        },
+        hasClass: function(sel) {
+            return this.a.length && $dom.hasClass(this.a[0], sel);
+		},
+        addClass: function(className) {
+			each(this.a, function(elt) {
+                $dom.addClass(elt, className);
+            });
+            return this;
+		},
+        removeClass: function(className) {
+			each(this.a, function(elt) {
+                $dom.removeClass(elt, className);
+            });
+            return this;
+		},
+        toggleClass: function(className, boolExpr) {
+			each(this.a, function(elt) {
+                $dom.toggleClass(elt, className, boolExpr);
+            });
+            return this;
+		},
+		style: function(prop, val) {
+			each(this.a, function(elt) {
+                $dom.style(elt, prop, val);
+            });
+            return this;
+		},
+		toDom: function() {
+			return this.a;
+		}
     };
 
     DomObject.onready = $dom.onready;
