@@ -490,7 +490,11 @@
     }
 
     function _hasClass(elm, className) {
-        return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
+        if (elm.hasOwnProperty("classList")) {
+            return elm.classList.contains("className")
+        } else {
+            return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
+        }
     }
 
     function _addClass(elm, className) {
