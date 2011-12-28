@@ -83,6 +83,8 @@
 	
 	<h2>General</h2>
 	<ul>
+		<li><a href="#dom-addevent">$dom.addEvent</a></li>
+		<li><a href="#dom-removeevent">$dom.removeEvent</a></li>
 		<li><a href="#dom-onready">$dom.onready</a></li>
 		<li><a href="#dom-get">$dom.get</a></li>
 		<li><a href="#dom-create">$dom.create</a></li>
@@ -177,6 +179,102 @@
 		 OTHER DEALINGS IN THE SOFTWARE.</p>
 		<hr />
 	</div>	
+	<div class="page" id="dom-addevent">
+		<h2>$dom.addEvent</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.addEvent( <var>element</var>, <var>event-name</var>, <var>function</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element where the event will be bound.</dd>
+			<dt><var>event-name</var></dt>
+			<dd>The event to be bound.</dd>
+			<dt><var>function</var></dt>
+			<dd>This function reference will be used as handler.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+
+		<h3>Notes</h3>
+		<p>This method will bind the event <var>event-name</var> to the passed <var>element</var>.
+		When this event will be fired, then the function <var>function</var> will be called with one
+		argument: the Event object.</p>
+		<h4>The Event object</h4>
+		<p>This Event object is normalized for browsers who
+		supports only attachEvent (which are Internet Explorer 8 and below):
+		<dl>
+		<dt><code>preventDefault()</code></dt>
+		<dd>call this method to prevent the browser's default action, like following a link.</dd>
+		<dt><code>stopPropagation()</code></dt>
+		<dd>call this method so that this event's propagation will be stopped: no other handlers
+		will be called for this event.</dd>
+		<dt><code>target</code></dt>
+		<dd>contains the DOM element that initiated the event.</dd>
+		<dt><code>currentTarget</code></dt>
+		<dd>contains the DOM element where the handler is bound.</dd>
+		</dl>
+		</p>
+		<p>The context <code>this</code> is equal to <code>e.currentTarget</code>.</p>
+		
+		
+		<h3>Examples</h3>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		function handler(e) {
+			
+			if (e.target.href.search(/google/) !== -1) {
+				e.preventDefault();
+				alert("This link will not be followed !");
+			}
+		}
+		
+		$dom.onready( function() {
+			var elt = $dom.get("#link");
+			$dom.addEvent(elt, "click", handler);
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;a id="link" href="http://www.google.fr/" &gt;Link to Google&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>
+	<div class="page" id="dom-removeevent">
+		<h2>$dom.removeEvent</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.removeEvent( <var>element</var>, <var>event-name</var>, <var>function</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element where the event will be unbound.</dd>
+			<dt><var>event-name</var></dt>
+			<dd>The event to be unbound.</dd>
+			<dt><var>function</var></dt>
+			<dd>This function reference that was used in a call to <code>addEvent</code>.</dd>
+		</dl>
+
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+
+		<h3>Notes</h3>
+		<p>This method will remove a handler that was previously bound using <code>addEvent</code>.</p>
+				
+		<hr />
+	</div>
 	<div class="page" id="dom-onready">
 		<h2>$dom.onready</h2>
 		<h3>Syntax</h3>
