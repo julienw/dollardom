@@ -103,12 +103,12 @@
                     e.target = e.srcElement || _document;
                     e.currentTarget = elm;
                     e.preventDefault = function() {
-                        e.returnValue = true;
+                        e.returnValue = false;
                     };
                     e.stopPropagation = function() {
                         e.cancelBubble = true;
                     };
-                    return handler.apply(elm, e);
+                    return handler.call(elm, e);
                 };
                 elm.attachEvent("on" + name, ieEvents[eventKey]);
             },
