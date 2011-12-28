@@ -89,6 +89,8 @@
 		<li><a href="#dom-onready">$dom.onready</a></li>
 		<li><a href="#dom-get">$dom.get</a></li>
 		<li><a href="#dom-create">$dom.create</a></li>
+		<li><a href="#dom-is">$dom.is</a></li>
+		<li><a href="#dom-empty">$dom.empty</a></li>
 	</ul>
 
 	<h2>DOM Traversal</h2>
@@ -348,6 +350,8 @@
 			<dd>Class selector</dd>
 			<dt><code>.class1.class2</code></dt>
 			<dd>Multipe class selector</dd>
+			<dt><code>#id.class2</code></dt>
+			<dd>ID and Class selector</dd>
 		</dl>
 		
 		<h4>Supported combinator formats</h4>
@@ -408,6 +412,187 @@ var nodes = $dom.get( "a.external", frames["testframe"].contentDocument.document
 </pre>
 		<hr />
 	</div>	
+
+	<div class="page" id="dom-create">
+		<h2>$dom.create</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.create( <var>selector</var> [, <var>document</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>selector</var></dt>
+			<dd>A simple selector string</dd>
+			<dt><var>document</var> [optional]</dt>
+			<dd>The <code>document</code> to create the object in - useful for working inside iframes.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A DOM node</p>
+
+		<h3>Notes</h3>
+		<p>This method will create a new DOM element based on the passed selector. A tag name must always be passed but
+		an optional ID and class list can also be defined,.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>div#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>div.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>div.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+			<dt><code>div#id.class2</code></dt>
+			<dd>ID and Class selector</dd>
+		</dl>		
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.create( "div" );
+var node = $dom.create( "div#test" );
+var node = $dom.create( "div.alt" );
+var node = $dom.create( "div#test.alt" );
+var node = $dom.create( "div#test.alt.more" );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.panel { 
+			width: 150px;
+			height: 100px;
+			border: 2px solid #000;
+		}
+		
+		.red {
+			background: #f00
+		}
+		
+		.blue {
+			background: #00f;
+		}
+	&lt;/style&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			document.body.appendChild( $dom.create( "div.panel.red" ) );
+			document.body.appendChild( $dom.create( "div.panel.blue" ) );
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;h1&gt;Test of $dom.onready&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>	
+
+	<div class="page" id="dom-is">
+		<h2>$dom.is</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.is( <var>element</var>, <var>selector</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element where the event will be bound.</dd>
+			<dt><var>selector</var></dt>
+			<dd>The selector to be tested.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A boolean value, true if the <var>element</var> matches the <var>selector</var>.</p>
+
+		<h3>Notes</h3>
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+		</dl>
+		
+		<h3>Examples</h3>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+			
+		$dom.onready( function() {
+			var elt = $dom.get("#google-link")[0];
+			var hasClassLink = $dom.is(elt, ".link"); // should return true
+		});
+
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;a id="google-link" class='link' href="http://www.google.fr/" &gt;Link to Google&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>
+
+	<div class="page" id="dom-empty">
+		<h2>$dom.empty</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.empty( <var>element</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>The element to empty.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Nothing</p>
+
+		<h3>Notes</h3>
+		<p>This method removes all the children of the passed <var>element</var>.</p>
+		
+		
+		<h3>Example</h3>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		
+		$dom.onready( function() {
+			var elt = $dom.get("#link")[0];
+			$dom.empty(elt);
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;div id="link" &gt;
+		&lt;a href="http://www.google.fr/" &gt;Link to Google&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>
+
 	<div class="page" id="dom-descendants">
 		<h2>$dom.descendants</h2>
 		<h3>Syntax</h3>
@@ -1368,83 +1553,6 @@ function( isComplete, elm )
 &lt;/body&gt;	
 </pre>
 </div>
-	<div class="page" id="dom-create">
-		<h2>$dom.create</h2>
-		<h3>Syntax</h3>
-		<pre>$dom.create( <var>selector</var> [, <var>document</var>] )</pre>
-
-		<h3>Parameters</h3>
-
-		<dl class="params">
-			<dt><var>selector</var></dt>
-			<dd>A simple selector string</dd>
-			<dt><var>document</var> [optional]</dt>
-			<dd>The <code>document</code> to create the object in - useful for working inside iframes.</dd>
-		</dl>
-
-		<h3>Return Value</h3>
-		<p>A DOM node</p>
-
-		<h3>Notes</h3>
-		<p>This method will create a new DOM element based on the passed selector. A tag name must always be passed but
-		an optional ID and class list can also be defined,.</p>
-		
-		<h4>Supported selector formats</h4>
-		<dl>
-			<dt><code>div</code></dt>
-			<dd>Type selector</dd>
-			<dt><code>#myid</code></dt>
-			<dd>ID selector</dd>
-			<dt><code>.class1</code></dt>
-			<dd>Class selector</dd>
-			<dt><code>.class1.class2</code></dt>
-			<dd>Multipe class selector</dd>
-		</dl>		
-		
-		<h3>Examples</h3>
-<h4>Syntax examples</h4>	
-<pre>
-var node = $dom.create( "div" );
-var node = $dom.create( "div#test" );
-var node = $dom.create( "div.alt" );
-var node = $dom.create( "div#test.alt" );
-var node = $dom.create( "div#test.alt.more" );
-</pre>
-<h4>Working example</h4>		
-<pre>
-&lt;html&gt;
-&lt;head&gt;
-	&lt;style type="text/css"&gt;
-		.panel { 
-			width: 150px;
-			height: 100px;
-			border: 2px solid #000;
-		}
-		
-		.red {
-			background: #f00
-		}
-		
-		.blue {
-			background: #00f;
-		}
-	&lt;/style&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
-	&lt;script type="text/javascript"&gt;
-		$dom.onready( function() {
-			document.body.appendChild( $dom.create( "div.panel.red" ) );
-			document.body.appendChild( $dom.create( "div.panel.blue" ) );
-		});
-	&lt;/script&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-	&lt;h1&gt;Test of $dom.onready&lt;/h1&gt;
-&lt;/body&gt;
-&lt;/html&gt;		
-</pre>
-		<hr />
-	</div>	
 
 <div id="footer">
 &copy;2009 Keith Clark
