@@ -98,16 +98,17 @@
             function (elm, name, handler)
             {
                 var eventKey = elm.uniqueID + name + handler;
-                ieEvents[eventKey] = function () {
+                ieEvents[eventKey] = function() {
                     var e = window.event;
-                    e.target = e.srcElement;
+                    e.target = e.srcElement || _document;
+                    e.currentTarget = elm;
                     e.preventDefault = function() {
                         e.returnValue = true;
                     };
                     e.stopPropagation = function() {
                         e.cancelBubble = true;
                     };
-                    handler(e);
+                    return handler.apply(elm, e);
                 };
                 elm.attachEvent("on" + name, ieEvents[eventKey]);
             },
