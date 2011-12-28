@@ -30,9 +30,14 @@
         }
         return result;
     }
+    
+    function _isArray(arg) {  
+		return Object.prototype.toString.call(arg) == '[object Array]';  
+	}
 
     var each = Array.prototype.forEach ? function(array, func) { array.forEach(func); } : _each,
-        map = Array.prototype.map ? function(array, func) { return array.map(func); } : _map;
+        map = Array.prototype.map ? function(array, func) { return array.map(func); } : _map,
+        isArray = Array.isArray || _isArray;
 	
 	function DomObject(array) {
 		this.a = array;
@@ -45,8 +50,11 @@
     function create(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
-
-
+    
+    function fromDom(a) {
+		a = isArray(a) ? a : [ a ];
+		return new DomObject(a);
+	}
 
     DomObject.prototype = {
         addEvent: function(name, handler) {
@@ -98,9 +106,7 @@
 			return this;
 		},
 		empty: function() {
-			each(this.a, function(elt) {
-                $dom.empty(elt);
-            });
+			each(this.a, $dom.empty);
             return this;
 		},
         is: function(sel) {
@@ -138,10 +144,11 @@
 		}
     };
 
-    DomObject.onready = $dom.onready;
-    DomObject.get = get;
-    DomObject.create = create;
-
-    window.$dom = DomObject;
+    window.$dom = {
+		onready: $dom.onready,
+		get: get,
+		create: create,
+		fromDom: fromDom
+	};
 	
 })(this);
