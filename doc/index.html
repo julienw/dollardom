@@ -67,6 +67,7 @@
 					$dom.toggleClass(links[c], "active", getHash(links[c].href) == id );
 				}
 				document.documentElement.scrollTop = 0;
+				window.location.hash = "#" + id;
 			}
 			showPage( document.location.href );
 		});
