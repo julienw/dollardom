@@ -141,6 +141,26 @@
 		},
 		toDom: function() {
 			return this.a;
+		},
+		append: function(what) {
+			if (what instanceof DomObject) {
+				what = what.toDom();
+			}
+			if (! isArray(what)) {
+				what = [ what ];
+			}
+			each(this.a, function(node) {
+				each(what, function(what) {
+					node.appendChild(what);
+				});
+			});
+		},
+		appendTo: function(node) {
+			if (! node instanceof DomObject) {
+				node = fromDom(node);
+			}
+			
+			node.append(this);
 		}
     };
 
