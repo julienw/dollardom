@@ -12,14 +12,17 @@
 	<h1>Create an element</h1>
 	<pre class='sh_javascript_dom'>/* The 'panel' class sets width and height.
    The 'red' class sets border and background color. */
-var node = $dom.create('div.panel.red');
-document.body.appendChild(node);</pre>
+$dom.get(".result")
+  .empty()
+  .append($dom.create('div.panel.red'));</pre>
 	<button id='create'>Execute this code !</button>
 	<div class='result'></div>
 	
 	<h1>Animate</h1>
 	<pre class='sh_javascript_dom'>// "square" is the red squared absolute-positioned div
-$dom.transform(square, { left: "150px", opacity: 0.2 });</pre>
+$dom.get(".result")
+  .descendants("> .square")
+  .transform({ left: "150px", opacity: 0.2 });</pre>
 	<button id='animate'>Execute this code !</button>
 	<button id='animate-reset'>Go back !</button>
 	<div class='result'>

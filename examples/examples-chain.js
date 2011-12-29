@@ -14,9 +14,10 @@ function setupExamples() {
 	var $button1 = $dom.get('#create');
 	$button1.addEvent("click", function() {
 
-		var result = $button1.next(".result").empty();
-		
-		$dom.create('div.panel.red').appendTo(result);
+		$button1
+			.next(".result")
+			.empty()
+			.append($dom.create('div.panel.red'));
 	});
 
 	var $button2 = $dom.get('#animate');
