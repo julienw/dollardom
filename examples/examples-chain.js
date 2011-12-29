@@ -18,21 +18,20 @@ function setupExamples() {
 		
 		$dom.create('div.panel.red').appendTo(result);
 	});
-	/*
-	var button2 = document.getElementById('animate');
-	$dom.addEvent(button2, 'click', function() {
-		var result = $dom.next(button2, ".result");
-		var square = $dom.first(result.firstChild, ".square");
-		
-		$dom.transform(square, { left: "150px", opacity: 0.2 });
+
+	var $button2 = $dom.get('#animate');
+	$button2.addEvent('click', function() {
+		$button2
+			.next(".result")
+			.descendants("> .square")
+			.transform({ left: "150px", opacity: 0.2 });
 	});
 	
-	var button3 = document.getElementById('animate-reset');
-	$dom.addEvent(button3, 'click', function() {
-		var result = $dom.next(button3, ".result");
-		var square = $dom.first(result.firstChild, ".square");
-		
-		$dom.transform(square, { left: 0, opacity: 1 });
-	});
-*/		
+	$dom.get('#animate-reset')
+		.addEvent('click', function() {
+			$dom.fromDom(this)
+				.next(".result")
+				.descendants("> .square")
+				.transform({ left: 0, opacity: 1 });
+		});
 }
