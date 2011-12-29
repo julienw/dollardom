@@ -31,6 +31,28 @@
         return result;
     }
     
+    // this doesn't detect cycles (like array containting itself)
+    function _flatten(array) {
+		var i = 0,
+			result = [],
+			queue = [ array ],
+			current, ii, ll, item;
+		
+		while (i < queue.length) {
+			current = queue[i]; // current is always an array
+			for (ii = 0, ll = current.length; ii < ll; ii++) {
+				item = current[ii];
+				if (isArray(item)) {
+					queue.push(item);
+				} else {
+					result.push(item);
+				}
+			}
+			i++;
+		}
+		return result;
+	}
+    
     function _isArray(arg) {  
 		return Object.prototype.toString.call(arg) == '[object Array]';  
 	}
@@ -56,7 +78,7 @@
 		return new DomObject(a);
 	}
 
-    DomObject.prototype = {
+    var proto = DomObject.prototype = {
         addEvent: function(name, handler) {
             each(this.a, function(elt) {
                 $dom.addEvent(elt, name, handler);
@@ -70,40 +92,48 @@
             return this;
         },
         descendants: function(sel) {
-            this.a = map(this.a, function(elt) {
-                return $dom.descendants(elt, sel);
-            });
-            return this;
+            return fromDom(
+				_flatten(
+					map(this.a, function(elt) {
+						return $dom.descendants(elt, sel);
+					})
+				)
+			);
         },
         ancestor: function(sel) {
-            this.a = map(this.a, function(elt) {
-                return $dom.ancestor(elt, sel);
-            });
-            return this;
+            return fromDom(
+				map(this.a, function(elt) {
+					return $dom.ancestor(elt, sel);
+				})
+			);
         },
         next: function(sel) {
-            this.a = map(this.a, function(elt) {
-                return $dom.next(elt, sel);
-            });
-            return this;
+            return fromDom(
+				map(this.a, function(elt) {
+					return $dom.next(elt, sel);
+				})
+			);
         },
         previous: function(sel) {
-            this.a = map(this.a, function(elt) {
-                return $dom.previous(elt, sel);
-            });
-            return this;
+            return fromDom(
+				map(this.a, function(elt) {
+					return $dom.previous(elt, sel);
+				})
+			);
         },
         first: function(sel) {
-			this.a = map(this.a, function(elt) {
-				return $dom.first(elt, sel);
-			});
-			return this;
+			return fromDom(
+				map(this.a, function(elt) {
+					return $dom.first(elt, sel);
+				})
+			);
 		},
         last: function(sel) {
-			this.a = map(this.a, function(elt) {
-				return $dom.last(elt, sel);
-			});
-			return this;
+			return fromDom(
+				map(this.a, function(elt) {
+					return $dom.last(elt, sel);
+				})
+			);
 		},
 		empty: function() {
 			each(this.a, $dom.empty);
@@ -154,6 +184,7 @@
 					node.appendChild(what);
 				});
 			});
+			return this;
 		},
 		appendTo: function(node) {
 			if (! node instanceof DomObject) {
@@ -161,8 +192,19 @@
 			}
 			
 			node.append(this);
+			return this;
 		}
     };
+
+	if ($dom.transform) {
+		proto.transform = proto.animate = function(props, duration, callback) {
+			each(this.a, function(elt) {
+				$dom.transform(elt, props, duration, callback);
+				callback = null; // call callback only once
+			});
+			return this;
+		};
+	}
 
     window.$dom = {
 		onready: $dom.onready,
