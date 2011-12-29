@@ -45,8 +45,12 @@
 		for (var c = animItems.length - 1; c >= 0; c--)	{
 			var	prop, style,
 				styles = {},
-				anim = animItems[c],
-				duration = anim.duration,
+				anim = animItems[c];
+			
+			// set startTime if not set
+			anim.startTime = anim.startTime || timestamp;
+			
+			var duration = anim.duration,
 				props = anim.properties,
 				ticks = timestamp - anim.startTime,
 				ref = 0.5 - (Math.cos(ticks / duration * (Math.PI)) / 2);
@@ -118,7 +122,6 @@
 
         animItems.push({
 			elm: elm,
-			startTime: +new Date(),
 			properties: props,
 			callback: callback,
 			duration: duration
