@@ -491,18 +491,30 @@
     }
 
     function _hasClass(elm, className) {
-        return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
+        if (elm.hasOwnProperty("classList")) {
+            return elm.classList.contains("className")
+        } else {
+            return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
+        }
     }
 
     function _addClass(elm, className) {
         if (!_hasClass(elm, className)) {
-            elm.className += " " + className;
+            if (elm.hasOwnProperty("classList")) {
+                elm.classList.add(className);
+            } else { 
+                elm.className += " " + className;
+            }
         }
     }
 
     function _removeClass(elm, className) {
         if (_hasClass(elm, className)) {
-            elm.className = elm.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), " ").replace(/\s$/, "");
+            if (elm.hasOwnProperty("classList")) {
+                elm.classList.remove(className);
+            } else { 
+                elm.className = elm.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), " ").replace(/\s$/, "");
+            }
         }
     }
 
@@ -550,4 +562,3 @@
     init();
 
 })(this);
-
