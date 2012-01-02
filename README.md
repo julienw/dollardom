@@ -55,17 +55,21 @@ even Internet Explorer 6. If you find a problem in such a browser, then
 it is a bug, please report it.
 * the syntax is clean. Compare:
 
- $("<div id='myDiv' class='class1 class2'>"); // jQuery
+```javascript
+$("<div id='myDiv' class='class1 class2'>"); // jQuery
+```
 
 with
 
- $dom.create("div#myDiv.class1.class2"); // $dom.
+```javascript
+    $dom.create("div#myDiv.class1.class2"); // $dom.
+```
 
 * it doesn't include the features you don't need, e.g. Array iteration
 functions (`forEach`, `map`, `reduce`, etc.) or Ajax. There are perfectly
 good polyfills outthere.
 * [Good documentation](http://julienw.github.com/dollardom/doc)
-* [Permissive BSD-like license](https://github.com/julienw/dollardom/raw/LICENSE)
+* [Permissive BSD-like license](https://github.com/julienw/dollardom/blob/master/LICENSE)
 * the author knows Javascript and the DOM (or I think so ;-) ).
 
 #### Weak points
