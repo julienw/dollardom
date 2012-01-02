@@ -1,26 +1,31 @@
 UGLIFYJS = uglifyjs
 
-all: $$dom.min.js $$dom-with-animate.min.js $$dom-with-chain.min.js $$dom-with-chain-animate.min.js
+MODULES = dollardom dollardom-animate dollardom-chain dollardom-chain-animate
+MINIFIED = $(addsuffix .min.js,$(MODULES))
+CONCAT = $(addsuffix .cat.js,$(MODULES))
 
-%.min.js: %.dev.js
-	$(UGLIFYJS) $< --unsafe
-	@echo $@ : `wc -c $@` bytes minified, `gzip -nfc $@ | wc -c` bytes gzipped
+VPATH = src
 
-generated:
-	mkdir generated
+.SUFFIXES:
+.DELETE_ON_ERROR:
+.INTERMEDIATE: $(CONCAT)
 
-generated/$$dom-with-animate.dev.js: generated $$dom.dev.js $$dom-animate.dev.js
+all: $(MINIFIED)
+.PHONY: all
+
+%.min.js: %.cat.js
+	$(UGLIFYJS) $< --unsafe > $@
+	@echo ---- $@: `cat "$@" | wc -c` bytes minified, `gzip -nfc "$@" | wc -c` bytes gzipped
+
+$(CONCAT): dollardom.js
 	cat $^ > $@
-	@echo $@ : `wc -c $@` bytes minified, `gzip -nfc $@ | wc -c` bytes gzipped
 
-generated/$$dom-with-chain.dev.js: generated $$dom.dev.js $$dom-chain.dev.js
-	cat $^ > $@
-	@echo $@ : `wc -c $@` bytes minified, `gzip -nfc $@ | wc -c` bytes gzipped
+dollardom-animate.cat.js: animate.js
 
-generated/$$dom-with-chain-animate.dev.js: generated $$dom.dev.js $$dom-animate.dev.js $$dom-chain.dev.js
-	cat $^ > $@
-	@echo $@ : `wc -c $@` bytes minified, `gzip -nfc $@ | wc -c` bytes gzipped
+dollardom-chain.cat.js: chain.js
 
+dollardom-chain-animate.cat.js: animate.js chain.js
+
+.PHONY: clean
 clean:
-	rm -f *.min.js
-	rm -rf generated
+	-rm -f *.min.js
