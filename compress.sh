@@ -3,10 +3,10 @@
 # then it is Copyright Paul Irish and under BSD and MIT dual licence
 # as per http://www.modernizr.com/license/
 
-IN='$dom.dev.js'
-OUT='$dom.min.js'
-IN_WITH_ANIMATE='$dom-animate.dev.js'
-OUT_WITH_ANIMATE='$dom-with-animate.min.js'
+IN='src/dollardom.js'
+OUT='dollardom.min.js'
+IN_WITH_ANIMATE='src/animate.js'
+OUT_WITH_ANIMATE='dollardom-animate.min.js'
 
 SIZE_MIN=`uglifyjs "$IN" --unsafe | tee "$OUT" | wc -c`
 SIZE_GZIP=`gzip -nfc "$OUT" | wc -c`
