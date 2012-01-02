@@ -9,22 +9,22 @@ FAQ
 
 ### Which version to download ?
 
-`$dom.dev.js` is always the most up to date version. I consider that is
+`dollardom.js` is always the most up to date version. I consider that is
 is pretty good quality, which means that I still find bugs myself, but
 that I feel it can be used on real web sites or web applications. Please
 report any bug you find.
 
-I'll try to keep `$dom.min.js` (minified with `uglifyjs`) in sync but
+I'll try to keep `dollardom.min.js` (minified with `uglifyjs`) in sync but
 take attention to the timestamp to be sure.
 
-If you want animation support, include either both `$dom.dev.js` and `$dom-animate.dev.js`
-or their concatened/minified version `$dom-with-animate.min.js`.
+If you want animation support, include either both `dollardom.js` and `animate.js`
+or their concatened/minified version `dollardom-animate.min.js`.
 Please note however that nowadays, you should consider doing simple
 animations with CSS transitions. For your more complex needs you can also
 have a look to SVG.
 
 If you want try the new jQuery-like simpler chaining API, you must include
-`$dom-chain.dev.js` as well. Since it is newer than the normal API, it
+`chain.js` as well. Since it is newer than the normal API, it
 could have some bugs. Please consider this syntax beta-quality.
 
 ### Why ?

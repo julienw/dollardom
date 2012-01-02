@@ -34,7 +34,7 @@
 		.page h2 { margin-left: 0;  }
 		.page h3 { margin-left: 0; margin-bottom: 0.5em }
 	</style>
-	<script type="text/javascript" src="../$dom.min.js"></script>
+	<script type="text/javascript" src="../dollardom.min.js"></script>
 	<script>
 		$dom.onready( function() {
 			var links = $dom.get("#tree>ul>li>a");
@@ -229,7 +229,7 @@
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		function handler(e) {
 			
@@ -304,7 +304,7 @@
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			$dom.style( document.body, "background-color", "#ffff00" );
@@ -380,7 +380,7 @@ var nodes = $dom.get( "a.external", frames["testframe"].contentDocument.document
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -476,7 +476,7 @@ var node = $dom.create( "div#test.alt.more" );
 			background: #00f;
 		}
 	&lt;/style&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			document.body.appendChild( $dom.create( "div.panel.red" ) );
@@ -529,7 +529,7 @@ var node = $dom.create( "div#test.alt.more" );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 			
 		$dom.onready( function() {
@@ -573,7 +573,7 @@ var node = $dom.create( "div#test.alt.more" );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		
 		$dom.onready( function() {
@@ -655,7 +655,7 @@ var nodes = $dom.descendants( document.body );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -745,7 +745,7 @@ var node = $dom.first( $dom.get("li") );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			// find the first UL tag
@@ -819,7 +819,7 @@ var node = $dom.last( $dom.get("li") );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			// find the first UL tag
@@ -893,7 +893,7 @@ var node = $dom.next( $dom.get("li")[0] );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			// find the first UL tag
@@ -968,7 +968,7 @@ var node = $dom.previous( $dom.get("p") );
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 			// find the first UL tag
@@ -1052,7 +1052,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 <pre>
 &lt;html&gt;
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -1116,7 +1116,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -1182,7 +1182,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -1250,7 +1250,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -1314,7 +1314,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
@@ -1411,7 +1411,7 @@ function( isComplete, elm )
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {		
 			var panel = $dom.get("#panel")[0];
@@ -1447,7 +1447,7 @@ function( isComplete, elm )
 		}
 	&lt;/style&gt;
 
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {		
 			var panel = $dom.get("#panel")[0];
@@ -1521,7 +1521,7 @@ function( isComplete, elm )
 		<h3>Examples</h3>
 <pre>
 &lt;head&gt;
-	&lt;script type="text/javascript" src="$dom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
 	&lt;script type="text/javascript"&gt;
 		$dom.onready( function() {
 		
