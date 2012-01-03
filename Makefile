@@ -4,6 +4,9 @@ JSMINIFY = uglifyjs
 # options to give to the minification command
 JSMINIFY_OPTS = --unsafe --lift-vars
 
+# command to run jshint
+CHECKJS = node lib/jshint/run.js
+
 # modules to be built
 MODULES = dollardom dollardom-animate dollardom-chain dollardom-chain-animate
 
@@ -12,6 +15,9 @@ MINIFIED = $(addsuffix .min.js,$(MODULES))
 
 # file names of concatenated files
 CONCAT = $(addsuffix .cat.js,$(MODULES))
+
+# all sources
+SOURCES = dollardom.js animate.js chain.js
 
 # directory for source files
 VPATH = src
@@ -37,7 +43,7 @@ all: $(MINIFIED)
 
 # all concatenated files depend on main dollardom file
 # the recipe just concatenates all specified prerequisites together
-$(CONCAT): dollardom.js
+$(CONCAT): dollardom.js | checkjs
 	cat $^ > $@
 
 # specify additional prerequisites for these targets
@@ -51,3 +57,8 @@ dollardom-chain-animate.cat.js: animate.js chain.js
 .PHONY: clean
 clean:
 	-rm -f *.min.js
+	-rm checkjs
+
+checkjs: $(SOURCES)
+	$(CHECKJS)
+	touch checkjs
