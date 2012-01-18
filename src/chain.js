@@ -79,18 +79,6 @@
 	}
 
     var proto = DomObject.prototype = {
-        addEvent: function(name, handler) {
-            each(this.a, function(elt) {
-                $dom.addEvent(elt, name, handler);
-            });
-            return this;
-        },
-        removeEvent: function(name, handler) {
-            each(this.a, function(elt) {
-                $dom.removeEvent(elt, name, handler);
-            });
-            return this;
-        },
         descendants: function(sel) {
             return fromDom(
 				_flatten(
@@ -100,74 +88,11 @@
 				)
 			);
         },
-        ancestor: function(sel) {
-            return fromDom(
-				map(this.a, function(elt) {
-					return $dom.ancestor(elt, sel);
-				})
-			);
-        },
-        next: function(sel) {
-            return fromDom(
-				map(this.a, function(elt) {
-					return $dom.next(elt, sel);
-				})
-			);
-        },
-        previous: function(sel) {
-            return fromDom(
-				map(this.a, function(elt) {
-					return $dom.previous(elt, sel);
-				})
-			);
-        },
-        first: function(sel) {
-			return fromDom(
-				map(this.a, function(elt) {
-					return $dom.first(elt, sel);
-				})
-			);
-		},
-        last: function(sel) {
-			return fromDom(
-				map(this.a, function(elt) {
-					return $dom.last(elt, sel);
-				})
-			);
-		},
-		empty: function() {
-			each(this.a, $dom.empty);
-            return this;
-		},
         is: function(sel) {
             return this.a.length && $dom.is(this.a[0], sel);
         },
         hasClass: function(sel) {
             return this.a.length && $dom.hasClass(this.a[0], sel);
-		},
-        addClass: function(className) {
-			each(this.a, function(elt) {
-                $dom.addClass(elt, className);
-            });
-            return this;
-		},
-        removeClass: function(className) {
-			each(this.a, function(elt) {
-                $dom.removeClass(elt, className);
-            });
-            return this;
-		},
-        toggleClass: function(className, boolExpr) {
-			each(this.a, function(elt) {
-                $dom.toggleClass(elt, className, boolExpr);
-            });
-            return this;
-		},
-		style: function(prop, val) {
-			each(this.a, function(elt) {
-                $dom.style(elt, prop, val);
-            });
-            return this;
 		},
 		toDom: function() {
 			return this.a;
@@ -196,6 +121,32 @@
 		}
     };
 
+	var changeFunctions = "addEvent,removeEvent,empty,addClass,removeClass,toggleClass,style".split(','),
+		mapFunctions = "ancestor,next,previous,first,last".split(',');
+
+	each(changeFunctions, function(funcName) {
+		proto[funcName] = function() {
+			var args = arguments;
+            each(this.a, function(elt) {
+				var thisArgs = [ elt ].concat(args);
+                $dom[funcName].apply(null, thisArgs);
+            });
+            return this;
+		};
+	});
+	
+	each(mapFunctions, function(funcName) {
+		 proto[funcName] = function() {
+			var args = arguments;
+            return fromDom(
+				map(this.a, function(elt) {
+					var thisArgs = [ elt ].concat(args);
+					return $dom[funcName].apply(null, thisArgs);
+				})
+			);
+        };
+	});
+	
 	if ($dom.transform) {
 		proto.transform = proto.animate = function(props, duration, callback) {
 			each(this.a, function(elt) {
