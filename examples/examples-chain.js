@@ -2,7 +2,7 @@ $dom.onready(init);
 
 function init() {
 	var body = document.body;
-	$dom.fromDom(body)
+	$dom.from(body)
 		.removeClass("no-js")
 		.addClass("has-js");
 	
@@ -30,7 +30,7 @@ function setupExamples() {
 	
 	$dom.get('#animate-reset')
 		.addEvent('click', function() {
-			$dom.fromDom(this)
+			$dom.from(this)
 				.next(".result")
 				.descendants("> .square")
 				.transform({ left: 0, opacity: 1 });

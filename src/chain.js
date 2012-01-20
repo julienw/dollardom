@@ -169,12 +169,12 @@
             });
             return this;
 		},
-		toDom: function() {
-			return this.a;
+		dom: function(n) {
+			return (typeof n === "number") ? this.a[n] : this.a;
 		},
 		append: function(what) {
 			if (what instanceof DomObject) {
-				what = what.toDom();
+				what = what.dom();
 			}
 			if (! isArray(what)) {
 				what = [ what ];
@@ -210,7 +210,7 @@
 		onready: $dom.onready,
 		get: get,
 		create: create,
-		fromDom: fromDom
+		from: fromDom
 	};
 	
 })(this);
