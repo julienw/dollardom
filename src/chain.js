@@ -54,7 +54,7 @@
 	}
     
     function _isArray(arg) {  
-		return Object.prototype.toString.call(arg) == '[object Array]';  
+		return Object.prototype.toString.call(arg) === '[object Array]';  
 	}
 
     var each = Array.prototype.forEach ? function(array, func) { array.forEach(func); } : _each,
