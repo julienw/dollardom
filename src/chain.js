@@ -65,11 +65,11 @@
 		this.a = array;
 	}
 
-	function get(sel, doc) {
+	function select(sel, doc) {
 		return new DomObject($dom.get(sel, doc));
 	}
 
-    function create(sel, doc) {
+    function element(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
     
@@ -206,11 +206,8 @@
 		};
 	}
 
-    window.$dom = {
-		onready: $dom.onready,
-		get: get,
-		create: create,
-		from: fromDom
-	};
+    $dom.sel = $dom.select = select;
+    $dom.el = $dom.element = element;
+    $dom.from = fromDom;
 	
 })(this);

@@ -11,7 +11,7 @@ function init() {
 }
 
 function setupExamples() {
-	var $button1 = $dom.get('#create');
+	var $button1 = $dom.sel('#create');
 	$button1.addEvent("click", function() {
 
 		$button1
@@ -20,7 +20,7 @@ function setupExamples() {
 			.append($dom.create('div.panel.red'));
 	});
 
-	var $button2 = $dom.get('#animate');
+	var $button2 = $dom.sel('#animate');
 	$button2.addEvent('click', function() {
 		$button2
 			.next(".result")
@@ -28,7 +28,7 @@ function setupExamples() {
 			.transform({ left: "150px", opacity: 0.2 });
 	});
 	
-	$dom.get('#animate-reset')
+	$dom.sel('#animate-reset')
 		.addEvent('click', function() {
 			$dom.from(this)
 				.next(".result")
