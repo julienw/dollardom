@@ -41,7 +41,7 @@ all: $(MINIFIED) dollardom-full.debug.js
 # recipe for minifying concatenated javascript files
 # it also removes the debug parts and checks the resulting file for correctness
 %.min.js: %.cat.js
-	sed -e '\#/\*!$(DEBUG_KEYWORD)#,\#$(DEBUG_KEYWORD)!\*/#d' $< > $<.tmp
+	sed  -e '\#/\*!$(DEBUG_KEYWORD)!\*/#d' -e '\#/\*!$(DEBUG_KEYWORD)#,\#$(DEBUG_KEYWORD)!\*/#d' $< > $<.tmp
 	$(CHECKJS) $<.tmp
 	$(JSMINIFY) $(JSMINIFY_OPTS) $<.tmp > $@
 	rm -f $<.tmp
@@ -61,7 +61,7 @@ dollardom-chain.cat.js: chain.js
 dollardom-chain-animate.cat.js: animate.js chain.js
 
 dollardom-full.debug.js: dollardom-chain-animate.cat.js
-	cp -f $< $>
+	cp -f $< $@
 
 # cleaning recipe
 .PHONY: clean
