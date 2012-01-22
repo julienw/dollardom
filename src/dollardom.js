@@ -142,6 +142,24 @@
 			}
         ;
 
+	/*!debug*/
+	function assert(msg, isTrue) {
+		if (!isTrue) {
+			throw ("assertion '" + msg + "' failed.");
+		}
+	}
+	
+	function assertRegexp(msg, str, re) {
+		assert(msg, re.test(str));
+	}
+	
+	function assertFunction(msg, func) {
+		var isFunc = Object.prototype.toString.call(arg) === '[object Function]';  
+
+		assert(msg + " is a function", isFunc);
+	}
+	/*debug!*/
+	
     function _setStyle(elm, property, value)
     {
         var prop = _getAlias(property), handler = styleHandlers[prop];
@@ -463,6 +481,7 @@
      }
 
     function _onready(handler) {
+		assertFunction("onready handler", handler); /*!debug!*/
         loadHandlers.push(handler);
     }
 

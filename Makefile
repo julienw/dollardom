@@ -22,6 +22,9 @@ SOURCES = dollardom.js animate.js chain.js
 # directory for source files
 VPATH = src
 
+# keyword to identify the debug parts in the source code 
+DEBUG_KEYWORD = debug
+
 # clear existing suffixes
 .SUFFIXES:
 
@@ -32,12 +35,16 @@ VPATH = src
 .INTERMEDIATE: $(CONCAT)
 
 # this is the default rule: build all minified files
-all: $(MINIFIED)
+all: $(MINIFIED) dollardom-full.debug.js
 .PHONY: all
 
 # recipe for minifying concatenated javascript files
+# it also removes the debug parts and checks the resulting file for correctness
 %.min.js: %.cat.js
-	$(JSMINIFY) $(JSMINIFY_OPTS) $< > $@
+	sed -e '\#/\*!$(DEBUG_KEYWORD)#,\#$(DEBUG_KEYWORD)!\*/#d' $< > $<.tmp
+	$(CHECKJS) $<.tmp
+	$(JSMINIFY) $(JSMINIFY_OPTS) $<.tmp > $@
+	rm -f $<.tmp
 	@echo ---- $@: `cat "$@" | wc -c` bytes minified, `gzip -nfc "$@" | wc -c` bytes gzipped
 	@echo
 
@@ -45,7 +52,7 @@ all: $(MINIFIED)
 # the recipe just concatenates all specified prerequisites together
 $(CONCAT): dollardom.js | checkjs
 	cat $^ > $@
-
+	
 # specify additional prerequisites for these targets
 dollardom-animate.cat.js: animate.js
 
@@ -53,12 +60,16 @@ dollardom-chain.cat.js: chain.js
 
 dollardom-chain-animate.cat.js: animate.js chain.js
 
+dollardom-full.debug.js: dollardom-chain-animate.cat.js
+	cp -f $< $>
+
 # cleaning recipe
 .PHONY: clean
 clean:
 	-rm -f *.min.js
+	-rm -f dollardom-full.debug.js
 	-rm checkjs
 
 checkjs: $(SOURCES)
-	$(CHECKJS)
+	$(CHECKJS) $^
 	touch checkjs
