@@ -11,6 +11,33 @@ beforeEach(function() {
         }
 
         return !this.isNot;
+    },
+    toThrowAssertion: function() {
+	  var result = false;
+	  var exception;
+	  if (typeof this.actual != 'function') {
+		throw new Error('Actual is not a function');
+	  }
+	  try {
+		this.actual();
+	  } catch (e) {
+		exception = e;
+	  }
+	  if (exception) {
+		result = /^assertion/.test(exception);
+	  }
+
+	  var not = this.isNot ? "not " : "";
+
+	  this.message = function() {
+		  if (exception) {
+			  return "Expected function throwed an exception instead of the expected assertion:" + exception;
+		  } else {
+			  return "Expected function didn't throw the expected assertion.";
+		  }
+	  };
+
+	  return result;
     }
   });
 });
