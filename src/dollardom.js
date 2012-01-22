@@ -154,7 +154,7 @@
 	}
 	
 	function assertFunction(msg, func) {
-		var isFunc = Object.prototype.toString.call(arg) === '[object Function]';  
+		var isFunc = Object.prototype.toString.call(func) === '[object Function]';  
 
 		assert(msg + " is a function", isFunc);
 	}
