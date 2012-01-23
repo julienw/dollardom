@@ -3,7 +3,7 @@
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
-* Copyright 2011 Julien Wajsberg
+* Copyright 2011, 2012 Julien Wajsberg
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
@@ -576,7 +576,7 @@
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
-* Copyright 2011 Julien Wajsberg
+* Copyright 2011, 2012 Julien Wajsberg
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
@@ -711,7 +711,7 @@
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
-* Copyright 2011 Julien Wajsberg
+* Copyright 2011, 2012 Julien Wajsberg
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
@@ -761,7 +761,7 @@
 	}
     
     function _isArray(arg) {  
-		return Object.prototype.toString.call(arg) == '[object Array]';  
+		return Object.prototype.toString.call(arg) === '[object Array]';  
 	}
 
     var each = Array.prototype.forEach ? function(array, func) { array.forEach(func); } : _each,
