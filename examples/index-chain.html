@@ -12,7 +12,7 @@
 	<h1>Create an element</h1>
 	<pre class='sh_javascript_dom'>/* The 'panel' class sets width and height.
    The 'red' class sets border and background color. */
-$dom.get(".result")
+$dom.select(".result")
   .empty()
   .append($dom.create('div.panel.red'));</pre>
 	<button id='create'>Execute this code !</button>
@@ -20,7 +20,7 @@ $dom.get(".result")
 	
 	<h1>Animate</h1>
 	<pre class='sh_javascript_dom'>// "square" is the red squared absolute-positioned div
-$dom.get(".result")
+$dom.sel(".result")
   .descendants("> .square")
   .transform({ left: "150px", opacity: 0.2 });</pre>
 	<button id='animate'>Execute this code !</button>
