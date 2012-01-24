@@ -24,7 +24,7 @@
 		time,
 
     /* dom vars */
-		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/i,
+		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*$/i,
         re_get_alias = /-(\w)/g,
 		loadHandlers = [],
         ieEvents = [],
