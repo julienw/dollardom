@@ -10,9 +10,9 @@
 (function (window)
 /* options for jshint are here because uglifyjs needs a real piece of code between the comments
  * it keeps and the comments it removes */
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true */
+/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true, undef: true, smarttabs: true */
 /* future jshint options : nomen: true */
-/* undef options seems buggy, we use latedef */
+
 {
     var 
     /* these references exist to reduce size in minifiers */
@@ -24,7 +24,7 @@
 		time,
 
     /* dom vars */
-		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/i,
+		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*$/i,
         re_get_alias = /-(\w)/g,
 		loadHandlers = [],
         ieEvents = [],
@@ -90,13 +90,11 @@
 			};
         }
      var _addEvent = window.addEventListener ?
-            function (elm, name, handler)
-            {
+            function (elm, name, handler) {
                 elm.addEventListener(name, handler, false);
             }
         : 
-            function (elm, name, handler)
-            {
+            function (elm, name, handler) {
                 var eventKey = elm.uniqueID + name + handler;
                 ieEvents[eventKey] = function() {
                     var e = window.event;
@@ -158,6 +156,21 @@
 
 		assert(msg + " is a function", isFunc);
 	}
+    
+    function assertElement(msg, elm) {
+        assert(msg + " is element", elm instanceof window.Element);
+    }
+    
+    function assertString(msg, str) {
+        var type = typeof str;
+        assert(msg + " is string", type === "string");
+    }
+    
+    function assertSelector(msg, sel) {
+        assertString(msg, sel);
+        assertRegexp(msg + " is a selector", sel, re_selector_fragment);
+    }
+
 	/*debug!*/
 	
     function _setStyle(elm, property, value)
@@ -373,20 +386,36 @@
 		!(classes && !_hasClasses(elm, classes));
     }
 
-    function _find(elm, property, selectorFragment)
-    {
+    function _find(elm, property, selectorFragment) {
+        /*!debug*/
+        assertElement("elm", elm);
+        if (selectorFragment) {
+            assertSelector("selectorFragment", selectorFragment);
+        }
+        /*debug!*/
+        
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
         while (elm && (!_match(elm, selectorFragment)) && (elm = elm[property])) { }
         return elm;
     }
 
     function _is(elm, selectorFragment) {
+        assertElement("elm", elm); /*!debug!*/
+        assertSelector("selectorFragment", selectorFragment);  /*!debug!*/
+        
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
         return elm && _match(elm, selectorFragment);
     }
 
-    function _findNext(elm, property, selectorFragment) {
-        return _find(elm[property], property, selectorFragment);
+    function _findNext(elm, property, selector) {
+        /*!debug*/
+        assertElement("elm", elm);
+        if (selector) {
+            assertSelector("selector", selector);
+        }
+        /*debug!*/
+
+        return _find(elm[property], property, selector);
     }
 
     function _hasClasses(elm, classNames)
@@ -501,25 +530,50 @@
     }
 
     function _first(elm, selector) {
+        /*!debug*/
+        assertElement("elm", elm);
+        if (selector) {
+            assertSelector("selector", selector);
+        }
+        /*debug!*/
+
         elm = elm.parentNode.firstChild;
         return _find(elm, "nextSibling", selector);
     }
     function _last(elm, selector) {
+        /*!debug*/
+        assertElement("elm", elm);
+        if (selector) {
+            assertSelector("selector", selector);
+        }
+        /*debug!*/
+
         elm = elm.parentNode.lastChild;
         return _find(elm, "previousSibling", selector);
     }
 
     function _hasClass(elm, className) {
+        assertElement("elm", elm); /*!debug!*/
+        assertString("className", className); /*!debug!*/
+        assert("className has no space", className.indexOf(" ") === -1); /*!debug!*/
+
         return (" " + elm.className + " ").indexOf(" "+className+" ") > -1;
     }
 
     function _addClass(elm, className) {
+        assertElement("elm", elm); /*!debug!*/
+        assertString("className", className); /*!debug!*/
+        
         if (!_hasClass(elm, className)) {
             elm.className += " " + className;
         }
     }
 
     function _removeClass(elm, className) {
+        assertElement("elm", elm); /*!debug!*/
+        assertString("className", className); /*!debug!*/
+        assert("className has no space", className.indexOf(" ") === -1); /*!debug!*/        
+
         if (_hasClass(elm, className)) {
             elm.className = elm.className.replace(new RegExp("(^|\\s)" + className + "(\\s|$)"), " ").replace(/\s$/, "");
         }
@@ -530,6 +584,8 @@
     }
 
     function _empty(elm) {
+        assertElement("elm", elm); /*!debug!*/
+
         while (elm.firstChild) {
             elm.removeChild(elm.firstChild);
         }
