@@ -23,9 +23,16 @@ Please note however that nowadays, you should consider doing simple
 animations with CSS transitions. For your more complex needs you can also
 have a look to SVG.
 
-If you want try the new jQuery-like simpler chaining API, you must include
-`chain.js` as well. Since it is newer than the normal API, it
+If you want try the new jQuery-like simpler chaining API, you can use
+`dollardom-chain.min.js` or `dollardom-chain-animate.min.js` instead.
+Since it is newer than the normal API, it
 could have some bugs. Please consider this syntax beta-quality.
+
+A debug version is also available: `dollardom-full.debug.js`. Using this
+version during development makes you certain you use dollardom
+correctly, because otherwise you'll get exceptions.
+Please note that this version is not yet finished and some
+$dom functions are not checked yet.
 
 ### Why ?
 I used $dom in a project and wanted to fix one bug. Moreover Keith Clark
@@ -71,6 +78,7 @@ good polyfills outthere.
 * [Good documentation](http://julienw.github.com/dollardom/doc)
 * [Permissive BSD-like license](https://github.com/julienw/dollardom/blob/master/LICENSE)
 * the author knows Javascript and the DOM (or I think so ;-) ).
+* there is a _debugging_ version to help you use the library correctly.
 
 #### Weak points
 
@@ -86,7 +94,7 @@ which is cleaner and simpler than the legacy API.
 
 ### Is there an alternative ?
 [ender.js](http://ender.no.de/) could be a good alternative with its
-modular approach. This is a goal to integrate better with this tool.
+modular approach. One of our goals is to integrate better with this tool.
 
 Development notes
 ---
@@ -104,3 +112,6 @@ be installed with the command :
 * write more examples
 * make `transform` queueable
 * support attribute selector
+* add more assertion to the debug version
+* add the files to integrate with ender.
+
