@@ -10,9 +10,7 @@
 (function (window)
 /* options for jshint are here because uglifyjs needs a real piece of code between the comments
  * it keeps and the comments it removes */
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true, undef: true, smarttabs: true */
-/* future jshint options : nomen: true */
-
+/*jshint bitwise: true, curly: true, eqeqeq: true, immed: true, latedef: true, newcap: true, noarg: true, nonew: true, undef: true, boss: true, regexdash: true, smarttabs: true */
 {
     var 
     /* these references exist to reduce size in minifiers */
@@ -24,7 +22,7 @@
 		time,
 
     /* dom vars */
-		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*$/i,
+		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/i,
         re_get_alias = /-(\w)/g,
 		loadHandlers = [],
         ieEvents = [],
@@ -190,7 +188,7 @@
     {
         if (value === _undefined)
         {
-            if (typeof property == "string")
+            if (typeof property === "string")
             {
                 return _getStyle(elm, property) || 0;
             }
@@ -234,7 +232,7 @@
     // determines if the passed element is a descendant of anthor element
     function _isDescendant(elm, ancestor)
     {
-        while ((elm = elm.parentNode) && elm != ancestor) { }
+        while ((elm = elm.parentNode) && elm !== ancestor) { }
         return elm !== null;
     }
 
@@ -331,7 +329,7 @@
                         break;
 
                     case "+":
-                        while ((elm = elm.nextSibling) && elm.nodeType != 1) { }
+                        while ((elm = elm.nextSibling) && elm.nodeType !== 1) { }
                         if (elm && _match(elm, fragment))
                         {
                             results.push(elm);
@@ -381,8 +379,8 @@
             classes = selector.classes;
 
         return (elm.nodeType === 1) &&
-		!(tag && tag != elm.tagName) &&
-		!(id && id != elm.id) &&
+		!(tag && tag !== elm.tagName) &&
+		!(id && id !== elm.id) &&
 		!(classes && !_hasClasses(elm, classes));
     }
 
