@@ -7,7 +7,35 @@ describe("debug", function() {
 		}).toThrowAssertion();
 	});
     
-    // TODO addEvent, removeEvent, get, descendants
+    // TODO addEvent, removeEvent
+    
+    it("get should throw an exception if first arg is not a selector", function() {
+		expect(function() {
+			$dom.get("!");
+		}).toThrowAssertion();
+    });
+
+    it("get should throw an exception if first arg is not a complex selector", function() {
+		expect(function() {
+			$dom.get("a > b c + d ! e");
+		}).toThrowAssertion();
+    });
+    
+    it("descendants should throw an exception if arg is not an element", function() {
+		expect(function() {
+			$dom.descendants(2);
+		}).toThrowAssertion();
+    });
+    it("descendants should throw an exception if second arg is not a selector", function() {
+		expect(function() {
+			$dom.descendants(document.body, "%");
+		}).toThrowAssertion();
+    });
+    it("descendants should throw an exception if second arg is not a complex selector", function() {
+		expect(function() {
+			$dom.descendants(document.body, "a > b ! c > d");
+		}).toThrowAssertion();
+    });
     
     // next ancestor and previous use the same assert lines
     it("next accepts only elements as first argument", function() {

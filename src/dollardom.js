@@ -164,9 +164,16 @@
         assert(msg + " is string", type === "string");
     }
     
-    function assertSelector(msg, sel) {
+    var re_complexSelector = new RegExp('^(?:' + re_selector_fragment.source.slice(1) + ')+$');
+    function assertComplexSelector(msg, sel) {
         assertString(msg, sel);
-        assertRegexp(msg + " is a selector", sel, re_selector_fragment);
+        assertRegexp(msg + " is a complex selector", sel, re_complexSelector);
+    }
+
+    var re_simpleSelector = new RegExp(re_selector_fragment.source + '$');
+    function assertSimpleSelector(msg, sel) {
+        assertString(msg, sel);
+        assertRegexp(msg + " is a simple selector", sel, re_simpleSelector);
     }
 
 	/*debug!*/
@@ -238,8 +245,13 @@
 
 
     // $dom's CSS selector
-    function _descendants(refelm, selector)
-    {
+    function _descendants(refelm, selector) {
+        /*!debug*/
+        assertElement("refelm", refelm);
+        if (selector !== _undefined) {
+            assertComplexSelector("selector", selector);
+        }
+        /*debug!*/
 
         function find(elm, selectorFragment)
         {
@@ -387,8 +399,8 @@
     function _find(elm, property, selectorFragment) {
         /*!debug*/
         assertElement("elm", elm);
-        if (selectorFragment) {
-            assertSelector("selectorFragment", selectorFragment);
+        if (selectorFragment !== _undefined) {
+            assertSimpleSelector("selectorFragment", selectorFragment);
         }
         /*debug!*/
         
@@ -399,7 +411,7 @@
 
     function _is(elm, selectorFragment) {
         assertElement("elm", elm); /*!debug!*/
-        assertSelector("selectorFragment", selectorFragment);  /*!debug!*/
+        assertSimpleSelector("selectorFragment", selectorFragment);  /*!debug!*/
         
         selectorFragment = _sel(selectorFragment)[0]; // will be undefined if no match
         return elm && _match(elm, selectorFragment);
@@ -408,8 +420,8 @@
     function _findNext(elm, property, selector) {
         /*!debug*/
         assertElement("elm", elm);
-        if (selector) {
-            assertSelector("selector", selector);
+        if (selector !== _undefined) {
+            assertSimpleSelector("selector", selector);
         }
         /*debug!*/
 
@@ -513,7 +525,7 @@
     }
 
     function _get(selector, doc) {
-        return _descendants((doc || _document), selector);
+        return _descendants((doc || _docElt), selector);
     }
 
     function _ancestor(elm, selector) {
@@ -530,8 +542,8 @@
     function _first(elm, selector) {
         /*!debug*/
         assertElement("elm", elm);
-        if (selector) {
-            assertSelector("selector", selector);
+        if (selector !== _undefined) {
+            assertSimpleSelector("selector", selector);
         }
         /*debug!*/
 
@@ -541,8 +553,8 @@
     function _last(elm, selector) {
         /*!debug*/
         assertElement("elm", elm);
-        if (selector) {
-            assertSelector("selector", selector);
+        if (selector !== _undefined) {
+            assertSimpleSelector("selector", selector);
         }
         /*debug!*/
 
