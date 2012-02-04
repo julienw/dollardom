@@ -187,7 +187,7 @@
 			return this;
 		},
 		appendTo: function(node) {
-			if (! node instanceof DomObject) {
+			if (! (node instanceof DomObject)) {
 				node = fromDom(node);
 			}
 			
