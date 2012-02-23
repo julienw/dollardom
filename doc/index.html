@@ -20,9 +20,9 @@
 	.page.inactive			{ display:none }
 
 	#tree 					{ float:left; width:180px; margin-left:-220px; padding:20px; position: relative; border-right:2px solid #ccc }
-	#tree ul				{ list-style: square; margin: 0 0 2em 16px; padding:0 }
-	#tree h2				{ font-size:110%; border-bottom:1px solid #ccc}
-	#tree a					{ padding:1px 5px; color: #000; text-decoration: none}
+	#tree ul				{ list-style: square; margin: 0; padding:0 }
+	#tree h2				{ font-size:110%; border-bottom:1px solid #ccc; margin: 1em 0 .5em}
+	#tree a					{ color: #000; text-decoration: none}
 	#tree a.active			{ background:#cde; font-weight:bold }
 	
 	#footer					{ border-top:2px solid #ccc; background:#eee; clear: both; margin-left:-220px; text-align: center; padding:20px 0}
@@ -85,12 +85,13 @@
 	<h2>General</h2>
 	<ul>
 		<li><a href="#dom-addevent">$dom.addEvent</a></li>
-		<li><a href="#dom-removeevent">$dom.removeEvent</a></li>
-		<li><a href="#dom-onready">$dom.onready</a></li>
-		<li><a href="#dom-get">$dom.get</a></li>
 		<li><a href="#dom-create">$dom.create</a></li>
-		<li><a href="#dom-is">$dom.is</a></li>
 		<li><a href="#dom-empty">$dom.empty</a></li>
+		<li><a href="#dom-get">$dom.get</a></li>
+		<li><a href="#dom-is">$dom.is</a></li>
+		<li><a href="#dom-onready">$dom.onready</a></li>
+		<li><a href="#dom-removeevent">$dom.removeEvent</a></li>
+		<li><a href="#dom-text">$dom.text</a></li>
 	</ul>
 
 	<h2>DOM Traversal</h2>
@@ -106,11 +107,25 @@
 	<h2>CSS / Animation</h2>
 	<ul>
 		<li><a href="#dom-addClass">$dom.addClass</a></li>
-		<li><a href="#dom-removeClass">$dom.removeClass</a></li>
-		<li><a href="#dom-toggleClass">$dom.toggleClass</a></li>
 		<li><a href="#dom-hasClass">$dom.hasClass</a></li>
+		<li><a href="#dom-removeClass">$dom.removeClass</a></li>
 		<li><a href="#dom-style">$dom.style</a></li>
-		<li><a href="#dom-transform">$dom.transform</a></li>
+		<li><a href="#dom-toggleClass">$dom.toggleClass</a></li>
+		<li><a href="#dom-transform">$dom.transform / $dom.animate</a></li>
+	</ul>
+	
+	<h2>Chaining API</h2>
+	<ul>
+		<li><a href="#chaining">Introduction to chaining</a></li>
+		<li><a href="#chaining-Get">$dom.Get / $dom.select</a></li>
+		<li><a href="#chaining-From">$dom.From / $dom.from</a></li>
+		<li><a href="#chaining-Create">$dom.Create / $dom.element</a></li>
+		<li><a href="#chaining-append">.append()</a></li>
+		<li><a href="#chaining-appendTo">.appendTo()</a></li>
+		<li><a href="#chaining-dom">.dom()</a></li>
+		<li><a href="#chaining-each">.each()</a></li>
+		<li><a href="#chaining-size">.size()</a></li>
+		<li><a href="#chaining-text">.text()</a></li>
 	</ul>
 </div>
 
@@ -122,15 +137,17 @@
 		<h3>Overview</h3>
 		<p><b>$dom is a tiny Javascript library for selecting, traversing and animating DOM elements.</b></p>
 		<h3>Notes</h3>
-		<p>This project is in beta testing phase:</p>
+		<p>This project is made of different modules with different maturity:</p>
 		<ul>
-			<li>It may contain bugs. If you encounter any problems, feedback would be appreciated.</li>
-			<li>This is temporary documentation for beta testers, the final version will appear online.</li>
+			<li>Every software contains bugs. Even if it has been tested a lot, please
+			report back any problem you would encounter.</li>
+			<li>Please tell me if you're using $dom in your project, I'd be very happy
+			to know it.</li>
 			<li>More information can be found on the <a href="https://github.com/julienw/dollardom">$dom page</a> on github.</li>
 		</ul>
 
         <h3>Change log</h3>
-        <h4>v0.9.2b</h4>
+        <h4>v0.9.2</h4>
         <ul>
             <li>project hosted on github</li>
             <li>fixed a bug when the Array prototype was modified</li>
@@ -142,6 +159,11 @@
             <li>added 'is', 'empty' functions</li>
             <li>event object now has preventDefault and stopPropagation on IE</li>
             <li>animation functions now use <a href='http://hacks.mozilla.org/2010/08/more-efficient-javascript-animations-with-mozrequestanimationframe/'>requestAnimationFrame</a> on all supporting browsers</li>
+            <li>add unit testing (still incomplete)</li>
+            <li>add different flavors of the library</li>
+            <li>add a chaining API (<i>à la</i> jQuery) (consider beta quality)</li>
+            <li>add a debug flavor (still incomplete)</li>
+            <li>out of beta for the main library! Yay!</li>
         </ul>
 		<h4>v0.9.1b</h4>
 		<ul>
@@ -158,7 +180,7 @@
 		
 		<h3>License</h3>
 		<p>Copyright (c) 2009, 2010, 2011 Keith Clark</p>
-        <p>Copyright 2011 Julien Wajsberg</p>
+        <p>Copyright 2011, 2012 Julien Wajsberg</p>
 
 		 <p>Permission is hereby granted, free of charge, to any person
 		 obtaining a copy of this software and associated documentation
@@ -181,7 +203,55 @@
 		 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 		 OTHER DEALINGS IN THE SOFTWARE.</p>
 		<hr />
-	</div>	
+	</div>
+	<div class="page" id="chaining">
+		<h2>Introduction to the chaining API</h2>
+		<h3>Syntax</h3>
+<pre>
+$dom.Get("#id")
+    .addClass("active")
+    .append(
+        $dom.Create("p.text")
+            .text("lorem ipsum")
+    );
+</pre>
+		<h3>Notes</h3>
+		<p>Since version 0.9.2, $dom supports a chaining API. Basically, this API allows a more
+		natural way to use the library, that was popularized by the famous jQuery library.</p>
+		<p>This API comes on top of the legacy API. This means that you can use both API
+		at the same time. You can feed the chaining API with DOM elements that you got
+		from the legacy API or native DOM functions.</p>
+		<p>The chaining API makes it also a lot easier to manipulate many elements
+		in the same time. Of course, it is easier doesn't mean it performs well,
+		you should always be aware of what really happens behind the curtain.</p>
+		<p>Nearly all functions of the legacy API are callable in a chaining context.
+		The exceptions are:</p>
+		<ul>
+			<li><code>$dom.get</code>, <code>$dom.create</code> which
+		are replaced by the <em>factory methods</em> <a href='#chaining-get'>$dom.Get</a>,
+		<a href='#chaining-create'>$dom.Create</a> and <a href='#chaining-from'>$dom.From</a>.
+		Of course, you can still
+		use the legacy methods, which returns normal DOM Node objects.</li>
+			<li><code>$dom.onready</code> because the use case of calling
+			this on a DOM element is not so useful.</li>
+			<li><code>$dom.text</code> has different semantics when called
+			on a chaining object: it appends the string parameter as a 
+			text node. See <a href='#chaining-text'>the documentation for .text()</a>
+			for more informations.</li>
+		</ul>
+		<p>Some useful functions in a chaining context were added:</p>
+		<ul>
+			<li><a href='#chaining-append'>.append()</a> and
+			<a href='#chaining-appendTo'>.appendTo()</a> to add elements
+			to other elements</li>
+			<li><a href='#chaining-dom'>.dom()</a> to get back the
+			wrapped DOM objects</li>
+			<li><a href='#chaining-size'>.size()</a> to get the size
+			of the collection</li>
+			<li><a href='#chaining-each'>.each()</a> to apply a function
+			on all elements in the collection</li>
+		</ul>
+	</div>
 	<div class="page" id="dom-addevent">
 		<h2>$dom.addEvent</h2>
 		<h3>Syntax</h3>
@@ -221,7 +291,48 @@
 		</dl>
 		</p>
 		<p>The context <code>this</code> is equal to <code>e.currentTarget</code>.</p>
+		<p>It is common practice to <code>return false</code> from handler functions
+		to prevent the browser defaul action or stop propagation. However,
+		it is better to use the methods <code>stopPropagation</code> and
+		<code>preventDefault</code> because:</p>
+		<ul>
+			<li>your code is more readable</li>
+			<li>you can call them first, which means that if your code fails
+			for a reason, it will still obey your wishes</li>
+			<li>you can decide to only stop propagation or prevent the
+			default action, which you can't do with a return value</li>
+		</ul>
 		
+		<h4>Event delegation</h4>
+		<p>The technique known as <em>event delegation</em> is made possible
+		by the way browsers handle DOM events. Basically, all DOM events
+		go first by a capture phase (seldom used) from the root element 
+		of the page to the element that triggered the event, and then
+		go back in a bubble phase to the root element.</p>
+		<p>Any element in the way (which means the element
+		itself or any ancestor) can handle the event, and decide if the
+		event should bubble higher (with <code>stopPropagation</code>).</p>
+		<p>This technique has several advantages:</p>
+		<ul>
+			<li>If the same behaviour must be attached to the same
+			set of elements, you can instead attach the event
+			handler to an ancestor element. This means better performance.</li>
+			<li>You can attach the handler once at the startup of
+			your application, even if the elements are not there yet.
+			This means better performance too, and less code.</li>
+		</ul>
+		<p>Combining <code>$dom.addEvent</code> with <code>$dom.is</code> makes
+		it very easy to use event delegation:</p>
+<pre>
+$dom.addEvent(ancestor, 'click', function(e) {
+	var target = e.target;
+	e.preventDefault();
+
+	if ($dom.is(target, 'a')) {
+		doSomethingWith(target.href);
+	}
+});
+</pre>
 		
 		<h3>Examples</h3>
 
@@ -1346,7 +1457,7 @@ $dom.style( document.body, {"background-color": "#ffcc00", "color": "#000", "fon
 </pre>
 </div>
 	<div class="page" id="dom-transform">
-		<h2>$dom.transform</h2>
+		<h2>$dom.transform (alias: $dom.animate)</h2>
 		<h3>Syntax</h3>
 		<h4>To perform a transform</h4>
 		<pre>$dom.transform( <var>element</var>, <var>styles</var>[, <var>duration</var>, <var>callback</var>] )</pre>
@@ -1555,8 +1666,8 @@ function( isComplete, elm )
 </div>
 
 <div id="footer">
-&copy;2009 Keith Clark
-&mdash; &copy;2011 Julien Wajsberg
+&copy;2009, 2010, 2011 Keith Clark
+&mdash; &copy;2011, 2012 Julien Wajsberg
 </div>
 </body>
 </html>
