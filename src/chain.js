@@ -193,6 +193,13 @@
 			
 			node.append(this);
 			return this;
+		},
+		size: function() {
+			return this.a.length;
+		},
+		each: function(func) {
+			each(this.a, func);
+			return this;
 		}
     };
 
