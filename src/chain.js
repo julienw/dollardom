@@ -176,6 +176,7 @@
 			if (what instanceof DomObject) {
 				what = what.dom();
 			}
+			
 			if (! isArray(what)) {
 				what = [ what ];
 			}
@@ -200,6 +201,9 @@
 		each: function(func) {
 			each(this.a, func);
 			return this;
+		},
+		text: function(str) {
+			return this.append($dom.text(str));
 		}
     };
 

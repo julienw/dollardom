@@ -592,6 +592,10 @@
     function _toggleClass(elm, className, expr) {
         (expr ? _addClass : _removeClass)(elm, className);
     }
+    
+    function _text(str) {
+		return _document.createTextNode(str);
+	}
 
     function _empty(elm) {
         assertElement("elm", elm); /*!debug!*/
@@ -622,6 +626,7 @@
 	    last: _last,
         empty: _empty,
         is: _is,
+        text: _text,
 
 	    /* styling */
 	    hasClass: _hasClass,
