@@ -69,7 +69,7 @@
 		return new DomObject($dom.get(sel, doc));
 	}
 
-    function element(sel, doc) {
+    function newElement(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
     
@@ -206,8 +206,8 @@
 		};
 	}
 
-    $dom.sel = $dom.select = select;
-    $dom.el = $dom.element = element;
-    $dom.from = fromDom;
+    $dom.Get = $dom.select = select;
+    $dom.Create = $dom.element = element;
+    $dom.From = $dom.from = fromDom;
 	
 })(this);
