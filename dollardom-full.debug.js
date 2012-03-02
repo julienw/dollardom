@@ -592,6 +592,10 @@
     function _toggleClass(elm, className, expr) {
         (expr ? _addClass : _removeClass)(elm, className);
     }
+    
+    function _text(str) {
+		return _document.createTextNode(str);
+	}
 
     function _empty(elm) {
         assertElement("elm", elm); /*!debug!*/
@@ -622,6 +626,7 @@
 	    last: _last,
         empty: _empty,
         is: _is,
+        text: _text,
 
 	    /* styling */
 	    hasClass: _hasClass,
@@ -842,7 +847,7 @@
 		return new DomObject($dom.get(sel, doc));
 	}
 
-    function element(sel, doc) {
+    function newElement(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
     
@@ -949,6 +954,7 @@
 			if (what instanceof DomObject) {
 				what = what.dom();
 			}
+			
 			if (! isArray(what)) {
 				what = [ what ];
 			}
@@ -966,6 +972,16 @@
 			
 			node.append(this);
 			return this;
+		},
+		size: function() {
+			return this.a.length;
+		},
+		each: function(func) {
+			each(this.a, func);
+			return this;
+		},
+		text: function(str) {
+			return this.append($dom.text(str));
 		}
     };
 
@@ -979,8 +995,8 @@
 		};
 	}
 
-    $dom.sel = $dom.select = select;
-    $dom.el = $dom.element = element;
-    $dom.from = fromDom;
+    $dom.Get = $dom.select = select;
+    $dom.Create = $dom.element = element;
+    $dom.From = $dom.from = fromDom;
 	
 })(this);
