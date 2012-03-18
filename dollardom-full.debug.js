@@ -952,7 +952,7 @@
 		},
 		append: function(what) {
 			if (what instanceof DomObject) {
-				what = what.dom();
+				what = what.a;
 			}
 			
 			if (! isArray(what)) {
