@@ -996,7 +996,7 @@
 	}
 
     $dom.Get = $dom.select = select;
-    $dom.Create = $dom.element = element;
+    $dom.Create = $dom.element = newElement;
     $dom.From = $dom.from = fromDom;
 	
 })(this);
