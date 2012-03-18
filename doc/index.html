@@ -228,8 +228,9 @@ $dom.Get("#id")
 		The exceptions are:</p>
 		<ul>
 			<li><code>$dom.get</code>, <code>$dom.create</code> which
-		are replaced by the <em>factory methods</em> <a href='#chaining-get'>$dom.Get</a>,
-		<a href='#chaining-create'>$dom.Create</a> and <a href='#chaining-from'>$dom.From</a>.
+		are replaced by the <em>factory methods</em> with a capitalized
+		letter: <a href='#chaining-Get'>$dom.Get</a>,
+		<a href='#chaining-Create'>$dom.Create</a> and <a href='#chaining-From'>$dom.From</a>.
 		Of course, you can still
 		use the legacy methods, which returns normal DOM Node objects.</li>
 			<li><code>$dom.onready</code> because the use case of calling
@@ -252,6 +253,399 @@ $dom.Get("#id")
 			on all elements in the collection</li>
 		</ul>
 	</div>
+	<div class="page" id="chaining-Get">
+		<h2>$dom.Get or $dom.select</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.Get( <var>query</var> [, <var>document</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>query</var> [optional]</dt>
+			<dd>A selector string </dd>
+			<dt><var>document</var> [optional]</dt>
+			<dd>A <code>document</code> object to use as the start point - useful for working inside iframes.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A $dom object wrapping an array of <code>elements</code>.</p>
+
+		<h3>Notes</h3>
+		<p>This method will return a $dom object wrapping all elements in
+		passed <var>document</var> matching the passed <var>query</var>. If no document is
+		passed the the current document will be used.
+		If no query is passed, all elements are returned.</p>
+		<p>The $dom object has all the methods of the chaining API.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+			<dt><code>#id.class2</code></dt>
+			<dd>ID and Class selector</dd>
+		</dl>
+		
+		<h4>Supported combinator formats</h4>
+		<dl>
+			<dt><code>div p</code></dt>
+			<dd>Descendant combinator - matches all descendants of the current selector.</dd>
+			<dt><code>div &gt; p</code></dt>
+			<dd>Child combinator - matches the immediate children of the current selector.</dd>
+			<dt><code>div ~ p</code></dt>
+			<dd>General sibling combinator - matches all siblings following the current selector.</dd>
+			<dt><code>div + p</code></dt>
+			<dd>Adjacent sibling combinator - matches the sibling that immediately follows the current selector.</dd>
+		</dl>
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var $nodes = $dom.Get();
+var $nodes = $dom.Get("#test");
+var $nodes = $dom.Get("div#test.panel.main");
+// Get and select are synonyms
+var $nodes = $dom.select("h1 ~ p");
+var $nodes = $dom.select("a.external", frames["testframe"].contentDocument.document);
+</pre>
+
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+		
+			// find links one level deep in the nav bar
+			var $links = $dom.Get("#nav &gt; li &gt; a");
+			
+			// style the links
+			$links.style(links[c], "border", "1px solid #ff0000");
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;ul id="nav"&gt;
+		&lt;li&gt;&lt;a href="page1.html"&gt;Page 1&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page2.html"&gt;Page 2&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="page3.html"&gt;Page 3&lt;/a&gt;
+			&lt;ul&gt;
+				&lt;li&gt;&lt;a href="subpage1.html"&gt;Sub Page 1&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a href="subpage2.html"&gt;Sub Page 2&lt;/a&gt;&lt;/li&gt;
+			&lt;/ul&gt;	
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>	
+	<div class="page" id="chaining-From">
+		<h2>$dom.From or $dom.from</h2>
+		<h3>Syntax</h3>
+		<pre>var results = $dom.From( <var>element</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A DOM element or an array of DOM elements</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A $dom object wrapping the element or elements that were passed to the method.</p>
+
+		<h3>Notes</h3>
+		<p>The $dom object has all the methods of the chaining API.</p>
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var $nodes = $dom.From(document.getElementById('test'));
+</pre>
+		<hr />
+	</div>	
+	<div class="page" id="chaining-Create">
+		<h2>$dom.Create or $dom.element</h2>
+		<h3>Syntax</h3>
+		<pre>$dom.Create( <var>selector</var> [, <var>document</var>] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>selector</var></dt>
+			<dd>A simple selector string</dd>
+			<dt><var>document</var> [optional]</dt>
+			<dd>The <code>document</code> to create the object in - useful for working inside iframes.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A $dom object wrapping a DOM node</p>
+
+		<h3>Notes</h3>
+		<p>This method will create a new DOM element based on the passed selector. A tag name must always be passed but
+		an optional ID and class list can also be defined,.</p>
+		
+		<h4>Supported selector formats</h4>
+		<dl>
+			<dt><code>div</code></dt>
+			<dd>Type selector</dd>
+			<dt><code>div#myid</code></dt>
+			<dd>ID selector</dd>
+			<dt><code>div.class1</code></dt>
+			<dd>Class selector</dd>
+			<dt><code>div.class1.class2</code></dt>
+			<dd>Multipe class selector</dd>
+			<dt><code>div#id.class2</code></dt>
+			<dd>ID and Class selector</dd>
+		</dl>		
+		
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var node = $dom.Create( "div" );
+var node = $dom.Create( "div#test" );
+// Create and element are synonyms
+var node = $dom.element( "div.alt" );
+var node = $dom.element( "div#test.alt" );
+var node = $dom.Create( "div#test.alt.more" );
+</pre>
+<h4>Working example</h4>		
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+	&lt;style type="text/css"&gt;
+		.panel { 
+			width: 150px;
+			height: 100px;
+			border: 2px solid #000;
+		}
+		
+		.red {
+			background: #f00
+		}
+		
+		.blue {
+			background: #00f;
+		}
+	&lt;/style&gt;
+	&lt;script type="text/javascript" src="dollardom.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript"&gt;
+		$dom.onready( function() {
+			$dom.Create("div.panel.red").appendTo(document.body);
+			$dom.From(document.body).append($dom.Create("div.panel.blue"));
+		});
+	&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;h1&gt;Test of $dom.Create&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;		
+</pre>
+		<hr />
+	</div>	
+
+	<div class="page" id="chaining-append">
+		<h2>.append</h2>
+		<h3>Syntax</h3>
+		<pre>var $nodes = domObject.append( <var>element</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A $dom Object, a DOM element or an array of DOM elements</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>The $dom object itself.</p>
+
+		<h3>Example</h3>
+<h4>Syntax example</h4>	
+<pre>
+$dom.Get("#id-list").append($dom.create("div.panel.red"));
+</pre>
+		<hr />
+	</div>	
+
+	<div class="page" id="chaining-appendTo">
+		<h2>.appendTo</h2>
+		<h3>Syntax</h3>
+		<pre>var $nodes = domObject.appendTo( <var>element</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>element</var></dt>
+			<dd>A $dom Object or a DOM element</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>The $dom object itself.</p>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+$dom.Create("div.panel.red").appendTo(document.body);
+$dom.Create("div.panel.blue").appendTo($dom.get("#id-list"));
+$dom.Create("div.panel.green").appendTo(document.getElementById('id-list'));
+</pre>
+		<hr />
+	</div>
+
+
+	<div class="page" id="chaining-dom">
+		<h2>.dom</h2>
+		<h3>Syntax</h3>
+		<pre>var nodes = domObject.dom( [ <var>index</var> ] )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>index</var> [optional]</dt>
+			<dd>Index in the internal list of the element to be returned. The first item
+			has index 0.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>Either the complete array of wrapped DOM elements, or only one if <var>index</var>
+		is given.</p>
+		<p>If <var>index</var> is greater or equal to the number of 
+		elements, then it returns <var>undefined</var>.
+		</p>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var nodes = $dom.Get("a").dom();
+var firstLink = $dom.Get("a").dom(0);
+</pre>
+		<hr />
+	</div>
+
+	<div class="page" id="chaining-each">
+		<h2>.each</h2>
+		<h3>Syntax</h3>
+		<pre>var $nodes = domObject.each( <var>func</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>func</var></dt>
+			<dd>This function will be applied to each item in the internal
+			array. This function must take an argument which will be the 
+			DOM element.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>The $dom object.</p>
+
+		<h3>Notes</h3>
+		<p>Depending on the browser, the function can get extra parameters.
+		You should not depend on these parameters as your code won't be
+		cross browser anymore.</p>
+		<h3>Example</h3>
+<h4>Syntax example</h4>	
+<pre>
+$dom.Get("a").each(function(elt) {
+	// do something with DOM element elt
+});
+</pre>
+		<hr />
+	</div>
+
+	<div class="page" id="chaining-size">
+		<h2>.size</h2>
+		<h3>Syntax</h3>
+		<pre>var size = domObject.size()</pre>
+
+		<h3>Return Value</h3>
+		<p>The total number of elements wrapped in the $dom object.</p>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var numberOfLinks = $dom.Get("a").size();
+</pre>
+		<hr />
+	</div>
+
+	<div class="page" id="chaining-text">
+		<h2>.text</h2>
+		<h3>Syntax</h3>
+		<pre>var $nodes = domObject.text( <var>string</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>string</var></dt>
+			<dd>This text will be added as a text node to the elements
+			represented by the $dom object.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>The $dom object.</p>
+		
+		<h3>Notes</h3>
+		<p>It is important to use this method if you know the content
+		you want to append is text, especially if this text comes
+		from user input.</p>
+		<p>Be careful because the method has not the same behaviour as
+		the jQuery method of the same name, because it doesn't
+		replace the content on the nodes. If you need this behaviour,
+		just call <var>empty</var> before.</p>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+$dom.Get("a").each(function(elt) {
+	$dom.from(elt).text(" [" + elt.href + "]");
+});
+</pre>
+		<hr />
+	</div>
+
+
+	<div class="page" id="dom-text">
+		<h2>$dom.text</h2>
+		<h3>Syntax</h3>
+		<pre>var textNode = $dom.text( <var>string</var> )</pre>
+
+		<h3>Parameters</h3>
+
+		<dl class="params">
+			<dt><var>string</var></dt>
+			<dd>This text will be used to create a text node.</dd>
+		</dl>
+
+		<h3>Return Value</h3>
+		<p>A text node element containing the string.</p>
+		
+		<h3>Notes</h3>
+		<p>It is important to use this method if you know the content
+		you want to append is text, especially if this text comes
+		from user input.</p>
+
+		<h3>Examples</h3>
+<h4>Syntax examples</h4>	
+<pre>
+var links = $dom.get("a");
+for (var i = 0, l = links.length; i &lt; l; i++) {
+	var link = links[i];
+	link.appendChild($dom.text(" [" + link.href + "]));
+} 
+</pre>
+		<hr />
+	</div>
+	
 	<div class="page" id="dom-addevent">
 		<h2>$dom.addEvent</h2>
 		<h3>Syntax</h3>
@@ -597,7 +991,7 @@ var node = $dom.create( "div#test.alt.more" );
 &lt;/head&gt;
 
 &lt;body&gt;
-	&lt;h1&gt;Test of $dom.onready&lt;/h1&gt;
+	&lt;h1&gt;Test of $dom.create&lt;/h1&gt;
 &lt;/body&gt;
 &lt;/html&gt;		
 </pre>
