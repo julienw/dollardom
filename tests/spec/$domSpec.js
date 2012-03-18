@@ -130,7 +130,6 @@ describe("$dom", function() {
       });
       it("find first tag", function() {
           var node = $dom.first(testElements.sib3, "span");
-          console.log(node);
           expect(node).toBe(testElements.sib2);
       });
       it("find first class", function() {

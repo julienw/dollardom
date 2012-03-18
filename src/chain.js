@@ -4,7 +4,7 @@
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
-* Copyright 2011 Julien Wajsberg
+* Copyright 2011, 2012 Julien Wajsberg
 * Licensed under the MIT License
 * http://github.com/julienw/dollardom
 */
@@ -54,7 +54,7 @@
 	}
     
     function _isArray(arg) {  
-		return Object.prototype.toString.call(arg) == '[object Array]';  
+		return Object.prototype.toString.call(arg) === '[object Array]';  
 	}
 
     var each = Array.prototype.forEach ? function(array, func) { array.forEach(func); } : _each,
@@ -65,11 +65,11 @@
 		this.a = array;
 	}
 
-	function get(sel, doc) {
+	function select(sel, doc) {
 		return new DomObject($dom.get(sel, doc));
 	}
 
-    function create(sel, doc) {
+    function newElement(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
     
@@ -99,8 +99,9 @@
 		},
 		append: function(what) {
 			if (what instanceof DomObject) {
-				what = what.toDom();
+				what = what.a;
 			}
+			
 			if (! isArray(what)) {
 				what = [ what ];
 			}
@@ -112,12 +113,22 @@
 			return this;
 		},
 		appendTo: function(node) {
-			if (! node instanceof DomObject) {
+			if (! (node instanceof DomObject)) {
 				node = fromDom(node);
 			}
 			
 			node.append(this);
 			return this;
+		},
+		size: function() {
+			return this.a.length;
+		},
+		each: function(func) {
+			each(this.a, func);
+			return this;
+		},
+		text: function(str) {
+			return this.append($dom.text(str));
 		}
     };
 
@@ -157,11 +168,8 @@
 		};
 	}
 
-    window.$dom = {
-		onready: $dom.onready,
-		get: get,
-		create: create,
-		fromDom: fromDom
-	};
+    $dom.Get = $dom.select = select;
+    $dom.Create = $dom.element = element;
+    $dom.From = $dom.from = fromDom;
 	
 })(this);
