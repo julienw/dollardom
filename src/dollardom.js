@@ -22,7 +22,7 @@
 		time,
 
     /* dom vars */
-		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/,
+		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?(?:\[([\w\[=\]]+)\])?\s*/,
         re_get_alias = /-(\w)/g,
 		loadHandlers = [],
         ieEvents = [],
@@ -227,7 +227,8 @@
                     rel: f[1],
                     uTag: (f[2] || "").toUpperCase(),
                     id: f[3],
-                    classes: (f[4]) ? f[4].split(".") : _undefined
+                    classes: (f[4]) ? f[4].split(".") : _undefined,
+                    attr: f[5] ? f[5].split("=") : _undefined
                 });
                 selector = selector.substring(f[0].length);
             }
@@ -388,12 +389,14 @@
 
         var tag = selector.uTag,
             id = selector.id,
-            classes = selector.classes;
+            classes = selector.classes,
+            attr = selector.attr;
 
         return (elm.nodeType === 1) &&
 		!(tag && tag !== elm.tagName) &&
 		!(id && id !== elm.id) &&
-		!(classes && !_hasClasses(elm, classes));
+		!(classes && !_hasClasses(elm, classes)) &&
+        !(attr && !_hasAttributes(elm, attr));
     }
 
     function _find(elm, property, selectorFragment) {
@@ -440,6 +443,9 @@
             }
         }
         return _true;
+    }
+    
+    function _hasAttributes(elm, attributeSelectors) {
     }
 
     function init()
