@@ -468,12 +468,6 @@
             fn();
         }
 
-        if (/loaded|complete/.test(_document.readyState)) {
-            // already ready
-            window.setTimeout(fn, 0);
-            return;
-        }
-
         /* we're lucky because addEventListener and DOMContentLoaded are both
          * supported from IE9 */
         if (_document.addEventListener)
@@ -521,7 +515,12 @@
 
     function _onready(handler) {
 		assertFunction("onready handler", handler); /*!debug!*/
-        loadHandlers.push(handler);
+        if (/loaded|complete/.test(_document.readyState)) {
+            // already ready
+            window.setTimeout(handler, 0);
+        } else {
+            loadHandlers.push(handler);
+        }
     }
 
     function _get(selector, doc) {
