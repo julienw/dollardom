@@ -515,7 +515,9 @@
 
     function _onready(handler) {
 		assertFunction("onready handler", handler); /*!debug!*/
-        if (/loaded|complete/.test(_document.readyState)) {
+        // readyState can be "interactive" too
+        // see jquery bug http://bugs.jquery.com/ticket/10067
+        if (/loaded|complete|interactive/.test(_document.readyState)) {
             // already ready
             window.setTimeout(handler, 0);
         } else {
