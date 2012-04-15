@@ -857,7 +857,7 @@
 		return new DomObject(a);
 	}
 
-    var proto = DomObject.prototype = {
+    var proto = $dom.fn = DomObject.prototype = {
         addEvent: function(name, handler) {
             each(this.a, function(elt) {
                 $dom.addEvent(elt, name, handler);
