@@ -605,6 +605,20 @@
             elm.removeChild(elm.firstChild);
         }
     }
+    
+    function extend(target, src) {
+        if (!src) {
+            // if called with 1 argument, extend $dom itself
+            // (or DomObject prototype, see chain.js)
+            src = target;
+            target = this;
+        }
+        
+        for (var key in src) {
+            // let's say src will be a "pure" object
+            target[key] = src[key];
+        }
+    }
 
 
     var dom = {
@@ -634,7 +648,10 @@
 	    addClass: _addClass,
 	    removeClass: _removeClass,
 	    toggleClass: _toggleClass,
-	    style: _style
+	    style: _style,
+        
+        /* extending for plugin */
+        extend: extend
 	};
 
     window.$dom = dom;

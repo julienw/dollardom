@@ -204,7 +204,8 @@
 		},
 		text: function(str) {
 			return this.append($dom.text(str));
-		}
+		},
+        extend: $dom.extend
     };
 
 	if ($dom.transform) {
@@ -217,8 +218,15 @@
 		};
 	}
 
-    $dom.Get = $dom.select = select;
-    $dom.Create = $dom.element = newElement;
-    $dom.From = $dom.from = fromDom;
+    $dom.extend({
+        Get: select,
+        select: select,
+        Create: newElement,
+        element: newElement,
+        From: fromDom,
+        from: fromDom,
+        each: each,
+        map: map
+    });
 	
 })(this);
