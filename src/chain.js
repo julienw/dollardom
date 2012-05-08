@@ -12,7 +12,7 @@
 (function(window) {
 /*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true */
 
-	var $dom = window.$dom;
+    var $dom = window.$dom;
 
     /* utilities functions */
     function _each(array, func) {
@@ -33,50 +33,50 @@
     
     // this doesn't detect cycles (like array containting itself)
     function _flatten(array) {
-		var i = 0,
-			result = [],
-			queue = [ array ],
-			current, ii, ll, item;
-		
-		while (i < queue.length) {
-			current = queue[i]; // current is always an array
-			for (ii = 0, ll = current.length; ii < ll; ii++) {
-				item = current[ii];
-				if (isArray(item)) {
-					queue.push(item);
-				} else {
-					result.push(item);
-				}
-			}
-			i++;
-		}
-		return result;
-	}
+        var i = 0,
+            result = [],
+            queue = [ array ],
+            current, ii, ll, item;
+        
+        while (i < queue.length) {
+            current = queue[i]; // current is always an array
+            for (ii = 0, ll = current.length; ii < ll; ii++) {
+                item = current[ii];
+                if (isArray(item)) {
+                    queue.push(item);
+                } else {
+                    result.push(item);
+                }
+            }
+            i++;
+        }
+        return result;
+    }
     
     function _isArray(arg) {  
-		return Object.prototype.toString.call(arg) === '[object Array]';  
-	}
+        return Object.prototype.toString.call(arg) === '[object Array]';  
+    }
 
     var each = Array.prototype.forEach ? function(array, func) { array.forEach(func); } : _each,
         map = Array.prototype.map ? function(array, func) { return array.map(func); } : _map,
         isArray = Array.isArray || _isArray;
-	
-	function DomObject(array) {
-		this.a = array;
-	}
+    
+    function DomObject(array) {
+        this.a = array;
+    }
 
-	function select(sel, doc) {
-		return new DomObject($dom.get(sel, doc));
-	}
+    function select(sel, doc) {
+        return new DomObject($dom.get(sel, doc));
+    }
 
     function newElement(sel, doc) {
         return new DomObject([ $dom.create(sel, doc) ]);
     }
     
     function fromDom(a) {
-		a = isArray(a) ? a : [ a ];
-		return new DomObject(a);
-	}
+        a = isArray(a) ? a : [ a ];
+        return new DomObject(a);
+    }
 
     var proto = $dom.fn = DomObject.prototype = {
         addEvent: function(name, handler) {
@@ -93,130 +93,130 @@
         },
         descendants: function(sel) {
             return fromDom(
-				_flatten(
-					map(this.a, function(elt) {
-						return $dom.descendants(elt, sel);
-					})
-				)
-			);
+                _flatten(
+                    map(this.a, function(elt) {
+                        return $dom.descendants(elt, sel);
+                    })
+                )
+            );
         },
         ancestor: function(sel) {
             return fromDom(
-				map(this.a, function(elt) {
-					return $dom.ancestor(elt, sel);
-				})
-			);
+                map(this.a, function(elt) {
+                    return $dom.ancestor(elt, sel);
+                })
+            );
         },
         next: function(sel) {
             return fromDom(
-				map(this.a, function(elt) {
-					return $dom.next(elt, sel);
-				})
-			);
+                map(this.a, function(elt) {
+                    return $dom.next(elt, sel);
+                })
+            );
         },
         previous: function(sel) {
             return fromDom(
-				map(this.a, function(elt) {
-					return $dom.previous(elt, sel);
-				})
-			);
+                map(this.a, function(elt) {
+                    return $dom.previous(elt, sel);
+                })
+            );
         },
         first: function(sel) {
-			return fromDom(
-				map(this.a, function(elt) {
-					return $dom.first(elt, sel);
-				})
-			);
-		},
+            return fromDom(
+                map(this.a, function(elt) {
+                    return $dom.first(elt, sel);
+                })
+            );
+        },
         last: function(sel) {
-			return fromDom(
-				map(this.a, function(elt) {
-					return $dom.last(elt, sel);
-				})
-			);
-		},
-		empty: function() {
-			each(this.a, $dom.empty);
+            return fromDom(
+                map(this.a, function(elt) {
+                    return $dom.last(elt, sel);
+                })
+            );
+        },
+        empty: function() {
+            each(this.a, $dom.empty);
             return this;
-		},
+        },
         is: function(sel) {
             return this.a.length && $dom.is(this.a[0], sel);
         },
         hasClass: function(sel) {
             return this.a.length && $dom.hasClass(this.a[0], sel);
-		},
+        },
         addClass: function(className) {
-			each(this.a, function(elt) {
+            each(this.a, function(elt) {
                 $dom.addClass(elt, className);
             });
             return this;
-		},
+        },
         removeClass: function(className) {
-			each(this.a, function(elt) {
+            each(this.a, function(elt) {
                 $dom.removeClass(elt, className);
             });
             return this;
-		},
+        },
         toggleClass: function(className, boolExpr) {
-			each(this.a, function(elt) {
+            each(this.a, function(elt) {
                 $dom.toggleClass(elt, className, boolExpr);
             });
             return this;
-		},
-		style: function(prop, val) {
-			each(this.a, function(elt) {
+        },
+        style: function(prop, val) {
+            each(this.a, function(elt) {
                 $dom.style(elt, prop, val);
             });
             return this;
-		},
-		dom: function(n) {
-			return (typeof n === "number") ? this.a[n] : this.a;
-		},
-		append: function(what) {
-			if (what instanceof DomObject) {
-				what = what.a;
-			}
-			
-			if (! isArray(what)) {
-				what = [ what ];
-			}
-			each(this.a, function(node) {
-				each(what, function(what) {
-					node.appendChild(what);
-				});
-			});
-			return this;
-		},
-		appendTo: function(node) {
-			if (! (node instanceof DomObject)) {
-				node = fromDom(node);
-			}
-			
-			node.append(this);
-			return this;
-		},
-		size: function() {
-			return this.a.length;
-		},
-		each: function(func) {
-			each(this.a, func);
-			return this;
-		},
-		text: function(str) {
-			return this.append($dom.text(str));
-		},
+        },
+        dom: function(n) {
+            return (typeof n === "number") ? this.a[n] : this.a;
+        },
+        append: function(what) {
+            if (what instanceof DomObject) {
+                what = what.a;
+            }
+            
+            if (! isArray(what)) {
+                what = [ what ];
+            }
+            each(this.a, function(node) {
+                each(what, function(what) {
+                    node.appendChild(what);
+                });
+            });
+            return this;
+        },
+        appendTo: function(node) {
+            if (! (node instanceof DomObject)) {
+                node = fromDom(node);
+            }
+            
+            node.append(this);
+            return this;
+        },
+        size: function() {
+            return this.a.length;
+        },
+        each: function(func) {
+            each(this.a, func);
+            return this;
+        },
+        text: function(str) {
+            return this.append($dom.text(str));
+        },
         extend: $dom.extend
     };
 
-	if ($dom.transform) {
-		proto.transform = proto.animate = function(props, duration, callback) {
-			each(this.a, function(elt) {
-				$dom.transform(elt, props, duration, callback);
-				callback = null; // call callback only once
-			});
-			return this;
-		};
-	}
+    if ($dom.transform) {
+        proto.transform = proto.animate = function(props, duration, callback) {
+            each(this.a, function(elt) {
+                $dom.transform(elt, props, duration, callback);
+                callback = null; // call callback only once
+            });
+            return this;
+        };
+    }
 
     $dom.extend({
         Get: select,
@@ -228,5 +228,5 @@
         each: each,
         map: map
     });
-	
+    
 })(this);

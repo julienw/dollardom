@@ -14,23 +14,23 @@
 {
     var 
     /* these references exist to reduce size in minifiers */
-		_document = window.document,
+        _document = window.document,
         _docElt = _document.documentElement,
-		_true = true,
-		_false = false,
-		_undefined,
-		time,
+        _true = true,
+        _false = false,
+        _undefined,
+        time,
 
     /* dom vars */
-		re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/,
+        re_selector_fragment = /^\s*([>+~])?\s*([*\w-]+)?(?:#([\w-]+))?(?:\.([\w.-]+))?\s*/,
         re_get_alias = /-(\w)/g,
-		loadHandlers = [],
+        loadHandlers = [],
         ieEvents = [],
 
     // styleAlias is a css-name to camelCaseName lookup that's automatically populated when calling
     // the _getStyle() and _setStyle() methods. It's pre-populated with the float css lookup.
 
-		styleAlias = { "float": "cssFloat" in _docElt.style ? "cssFloat" : "styleFloat" },
+        styleAlias = { "float": "cssFloat" in _docElt.style ? "cssFloat" : "styleFloat" },
 
 
     // style handers are used to extend or override existing css properties. When calling _getStyle()
@@ -39,41 +39,41 @@
 
     // Standards based style handlers
 
-	    styleHandlers = {
-			borderWidth: {
-				    get: function (e) {
-				        return _getStyle(e, "border-left-width");
-				    }
-				},
-			padding: {
-				    get: function (e) {
-				        return _getStyle(e, "padding-left");
-				    }
-				},
-			margin: {
-				    get: function (e) {
-				        return _getStyle(e, "margin-left");
-				    }
-				}
-			};
+        styleHandlers = {
+            borderWidth: {
+                    get: function (e) {
+                        return _getStyle(e, "border-left-width");
+                    }
+                },
+            padding: {
+                    get: function (e) {
+                        return _getStyle(e, "padding-left");
+                    }
+                },
+            margin: {
+                    get: function (e) {
+                        return _getStyle(e, "margin-left");
+                    }
+                }
+            };
 
     // Internet Explorer style handlers
         if (! ("opacity" in _docElt.style) && ("filters" in _docElt)) {
             styleHandlers.opacity = {
-				    set: function (e, v) {
-				        var f = e.filters.alpha;
+                    set: function (e, v) {
+                        var f = e.filters.alpha;
 
-				        if (!f) {
-				            e.style.filter += " Alpha(opacity=" + (v * 100) + ")";
-				        } else {
-				            f.opacity = v * 100;
-				        }
-				    },
-				    get: function (e) {
-				        var f = e.filters.alpha;
-				        return f ? f.opacity / 100 : 1;
-				    }
-				};
+                        if (!f) {
+                            e.style.filter += " Alpha(opacity=" + (v * 100) + ")";
+                        } else {
+                            f.opacity = v * 100;
+                        }
+                    },
+                    get: function (e) {
+                        var f = e.filters.alpha;
+                        return f ? f.opacity / 100 : 1;
+                    }
+                };
         }
         // should trigger in IE and in some recent clients
         // TODO : this is just plain wrong
@@ -85,7 +85,7 @@
         if ("clientHeight" in _docElt) {
             styleHandlers.height = {
                 get: function (e) { return e.style.height || e.clientHeight || e.offsetHeight; }
-			};
+            };
         }
      var _addEvent = window.addEventListener ?
             function (elm, name, handler) {
@@ -123,37 +123,37 @@
             },
 
     _getStyle = (_document.defaultView && _document.defaultView.getComputedStyle) ?
-			function (elm, property)
-			{
-			    var prop = _getAlias(property), handler = styleHandlers[prop];
-			    return handler && handler.get ?
-					handler.get(elm) :
-					elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(property);
-			}
+            function (elm, property)
+            {
+                var prop = _getAlias(property), handler = styleHandlers[prop];
+                return handler && handler.get ?
+                    handler.get(elm) :
+                    elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(property);
+            }
         :
-			function (elm, property)
-			{
-			    var prop = _getAlias(property), handler = styleHandlers[prop];
-			    return ((handler && handler.get) ? handler.get(elm) : elm.currentStyle[prop]);
-			}
+            function (elm, property)
+            {
+                var prop = _getAlias(property), handler = styleHandlers[prop];
+                return ((handler && handler.get) ? handler.get(elm) : elm.currentStyle[prop]);
+            }
         ;
 
-	/*!debug*/
-	function assert(msg, isTrue) {
-		if (!isTrue) {
-			throw ("assertion '" + msg + "' failed.");
-		}
-	}
-	
-	function assertRegexp(msg, str, re) {
-		assert(msg, re.test(str));
-	}
-	
-	function assertFunction(msg, func) {
-		var isFunc = Object.prototype.toString.call(func) === '[object Function]';  
+    /*!debug*/
+    function assert(msg, isTrue) {
+        if (!isTrue) {
+            throw ("assertion '" + msg + "' failed.");
+        }
+    }
+    
+    function assertRegexp(msg, str, re) {
+        assert(msg, re.test(str));
+    }
+    
+    function assertFunction(msg, func) {
+        var isFunc = Object.prototype.toString.call(func) === '[object Function]';  
 
-		assert(msg + " is a function", isFunc);
-	}
+        assert(msg + " is a function", isFunc);
+    }
     
     function assertElement(msg, elm) {
         assert(msg + " is element", elm instanceof window.Element);
@@ -176,8 +176,8 @@
         assertRegexp(msg + " is a simple selector", sel, re_simpleSelector);
     }
 
-	/*debug!*/
-	
+    /*debug!*/
+    
     function _setStyle(elm, property, value)
     {
         var prop = _getAlias(property), handler = styleHandlers[prop];
@@ -256,8 +256,8 @@
         function find(elm, selectorFragment)
         {
             var c, results = selectorFragment.id ?
-				((c = ((elm && elm.ownerDocument) || _document).getElementById(selectorFragment.id)) && _isDescendant(c, elm)) ? [c] : [] :
-				toArray(elm.getElementsByTagName(selectorFragment.uTag || "*"));
+                ((c = ((elm && elm.ownerDocument) || _document).getElementById(selectorFragment.id)) && _isDescendant(c, elm)) ? [c] : [] :
+                toArray(elm.getElementsByTagName(selectorFragment.uTag || "*"));
             c = results.length;
 
             if (c > 0 && (selectorFragment.id || selectorFragment.classes)) {
@@ -295,13 +295,13 @@
         }
 
         var results = [],
-			elements = [refelm],
-			selectorFragments = _sel(selector),
-			c, lc,
-			d, ld,
-			e, le,
-			fragment,
-			elm, elms;
+            elements = [refelm],
+            selectorFragments = _sel(selector),
+            c, lc,
+            d, ld,
+            e, le,
+            fragment,
+            elm, elms;
 
         if (!selectorFragments.length) {
             selectorFragments = [{}];
@@ -329,7 +329,7 @@
                     case "~":
                         while (elm = elm.nextSibling)
                         {
-							if (_match(elm, fragment))
+                            if (_match(elm, fragment))
                             {
                                 if (contains(elm))
                                 {
@@ -346,7 +346,7 @@
                         {
                             results.push(elm);
                         }
-						
+                        
                         break;
 
                     default:
@@ -391,9 +391,9 @@
             classes = selector.classes;
 
         return (elm.nodeType === 1) &&
-		!(tag && tag !== elm.tagName) &&
-		!(id && id !== elm.id) &&
-		!(classes && !_hasClasses(elm, classes));
+        !(tag && tag !== elm.tagName) &&
+        !(id && id !== elm.id) &&
+        !(classes && !_hasClasses(elm, classes));
     }
 
     function _find(elm, property, selectorFragment) {
@@ -514,7 +514,7 @@
      }
 
     function _onready(handler) {
-		assertFunction("onready handler", handler); /*!debug!*/
+        assertFunction("onready handler", handler); /*!debug!*/
         // readyState can be "interactive" too
         // see jquery bug http://bugs.jquery.com/ticket/10067
         if (/loaded|complete|interactive/.test(_document.readyState)) {
@@ -595,8 +595,8 @@
     }
     
     function _text(str) {
-		return _document.createTextNode(str);
-	}
+        return _document.createTextNode(str);
+    }
 
     function _empty(elm) {
         assertElement("elm", elm); /*!debug!*/
@@ -622,37 +622,37 @@
 
 
     var dom = {
-	    /* -- Experimental methods --*/
+        /* -- Experimental methods --*/
 
-	    create: _create,
+        create: _create,
         onready: _onready,
 
-	    /* events */
-	    addEvent: _addEvent,
-	    removeEvent: _removeEvent,
+        /* events */
+        addEvent: _addEvent,
+        removeEvent: _removeEvent,
 
-	    /* dom manipulations */
-	    get: _get,
-	    descendants: _descendants,
-	    ancestor: _ancestor,
-	    next: _next,
-	    previous: _previous,
-	    first: _first,
-	    last: _last,
+        /* dom manipulations */
+        get: _get,
+        descendants: _descendants,
+        ancestor: _ancestor,
+        next: _next,
+        previous: _previous,
+        first: _first,
+        last: _last,
         empty: _empty,
         is: _is,
         text: _text,
 
-	    /* styling */
-	    hasClass: _hasClass,
-	    addClass: _addClass,
-	    removeClass: _removeClass,
-	    toggleClass: _toggleClass,
-	    style: _style,
+        /* styling */
+        hasClass: _hasClass,
+        addClass: _addClass,
+        removeClass: _removeClass,
+        toggleClass: _toggleClass,
+        style: _style,
         
         /* extending for plugin */
         extend: extend
-	};
+    };
 
     window.$dom = dom;
     init();
