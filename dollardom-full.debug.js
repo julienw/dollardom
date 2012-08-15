@@ -159,6 +159,10 @@
         assert(msg + " is element", elm instanceof window.Element);
     }
     
+    function assertNode(msg, elm) {
+        assert(msg + " is a node", elm instanceof window.Node);
+    }
+
     function assertString(msg, str) {
         var type = typeof str;
         assert(msg + " is string", type === "string");
@@ -398,7 +402,7 @@
 
     function _find(elm, property, selectorFragment) {
         /*!debug*/
-        assertElement("elm", elm);
+        assertNode("elm", elm);
         if (selectorFragment !== _undefined) {
             assertSimpleSelector("selectorFragment", selectorFragment);
         }
@@ -419,7 +423,7 @@
 
     function _findNext(elm, property, selector) {
         /*!debug*/
-        assertElement("elm", elm);
+        assertNode("elm", elm);
         if (selector !== _undefined) {
             assertSimpleSelector("selector", selector);
         }
@@ -542,7 +546,7 @@
 
     function _first(elm, selector) {
         /*!debug*/
-        assertElement("elm", elm);
+        assertNode("elm", elm);
         if (selector !== _undefined) {
             assertSimpleSelector("selector", selector);
         }
@@ -553,7 +557,7 @@
     }
     function _last(elm, selector) {
         /*!debug*/
-        assertElement("elm", elm);
+        assertNode("elm", elm);
         if (selector !== _undefined) {
             assertSimpleSelector("selector", selector);
         }
