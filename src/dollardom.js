@@ -601,6 +601,33 @@
     function _text(str) {
         return _document.createTextNode(str);
     }
+    
+    function setAttribute(elm, attr, value) {
+        elm.setAttribute(attr, "" + value);
+    }
+    
+    function getAttribute(elm, attr) {
+        return elm.getAttribute(attr) || null;
+    }
+    
+    function _attr(elm, attr, value) {
+        assertElement("elm", elm); /*!debug!*/
+
+        if (typeof attr === "object") {
+            for (var key in attr) {
+                setAttribute(elm, key, attr[key]);
+            }
+            return;
+        }
+        
+        assertString("attr", attr); /*!debug!*/
+        
+        if (value === _undefined) {
+            return getAttribute(elm, attr);
+        } else {
+            setAttribute(elm, attr, value);
+        }
+    }
 
     function _empty(elm) {
         assertElement("elm", elm); /*!debug!*/
@@ -646,6 +673,7 @@
         empty: _empty,
         is: _is,
         text: _text,
+        attr: _attr, /* beta quality */
 
         /* styling */
         hasClass: _hasClass,

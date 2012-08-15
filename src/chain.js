@@ -205,7 +205,10 @@
         text: function(str) {
             return this.append($dom.text(str));
         },
-        extend: $dom.extend
+        extend: $dom.extend,
+        attr: function(key, val) {
+            return this.a.length && $dom.attr(this.a[0], key, val);
+        }
     };
 
     if ($dom.transform) {

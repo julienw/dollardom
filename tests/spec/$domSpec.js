@@ -2,7 +2,7 @@ describe("$dom", function() {
   var testElements = {};
   beforeEach(function() {
       var testsElt = document.getElementById("tests");
-      testsElt.innerHTML = "<div class='level1 sib1'><div class='level2'><span class='level3'></span></div></div><span class='level1 sib2' id='middle'></span><span class='level1 sib3'></span>";
+      testsElt.innerHTML = "<div class='level1 sib1' attr1='attr1'><div class='level2'><span class='level3'></span></div></div><span class='level1 sib2' id='middle'></span><span class='level1 sib3'></span>";
       testElements = {
           tests : testsElt,
           level1 : testsElt.firstChild,
@@ -280,6 +280,24 @@ describe("$dom", function() {
       it("removeClass", function() {
           $dom.removeClass(testElements.level1, "sib1");
           expect(testElements.level1.className).not.toMatch(/\bsib1\b/);
+      });
+  });
+  describe("manipulating attributes", function() {
+      it("get attr", function() {
+          expect($dom.attr(testElements.level1, "attr1")).toEqual("attr1");
+          expect($dom.attr(testElements.level1, "attr2")).toBeNull();
+      });
+      it("set one attr", function() {
+          $dom.attr(testElements.level1, "attr2", "attr2");
+          expect(testElements.level1.getAttribute("attr2")).toEqual("attr2");
+      });
+      it("set multiple attrs", function() {
+          $dom.attr(testElements.level1, {
+              attr3: "attr3",
+              attr4: "attr4"
+          });
+          expect(testElements.level1.getAttribute("attr3")).toEqual("attr3");
+          expect(testElements.level1.getAttribute("attr4")).toEqual("attr4");
       });
   });
 });
