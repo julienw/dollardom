@@ -7,31 +7,30 @@
 
   <style type="text/css">
   body, html {
-      background-color: white;
+      background-color: #ddd;
       font-family: Helvetica, Arial, FreeSans, sans-serif;
-      color: black;
+      color: #222;
       margin: 0;
       padding: 0;
   }
 
   #container {
+      background-color: #fff0e0;
+
       margin: 0 auto;
       padding: 1em;
-      width: 700px;
-      border-left: 1px solid #333;
-      border-right: 1px solid #333;
-  }
-
-  #header {
-      background-color: #006610;
-      background-image: -moz-linear-gradient(#006610, #004405);
-      background-image: -webkit-gradient(linear, left top, left bottom, from(#006610), to(#004405));
-      background-image: -o-linear-gradient(#006610, #004405);
-      background-image: -ms-linear-gradient(#006610, #004405);
-      background-image: -webkit-linear-gradient(#006610, #004405);
-      background-image: linear-gradient(#006610, #004405);
-      color: white;
-      padding: .5em 1em 1em 1em;
+      width: 50em;
+      max-width: 100%;
+      border-left: 1px solid #666;
+      border-right: 1px solid #666;
+      
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -o-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+      box-sizing: border-box;
+      
+      box-shadow: 0 -5px 15px 4px #444;
   }
 
   h1, h2, h3 {
@@ -41,10 +40,10 @@
 
     h1 { font-size: 3.8em}
     h1 .small { font-size: 0.4em; }
-    h1 a { color: white }
+    h1 a { text-decoration: none; color: inherit }
     h2 { font-size: 1.5em }
     h3 { text-align: center }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .description { font-size: 1.2em; margin: 0 0 1.5em 0; font-style: italic;}
     .download { float: right; }
     pre {
         background: #000;
@@ -66,16 +65,14 @@
     <a href="http://github.com/julienw/dollardom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
 
 
-    <div id='header'>
-    <h1><a href="http://github.com/julienw/dollardom">dollardom</a>
-      <span class="small">by <a href="http://github.com/julienw">julienw</a></span></h1>
-
-    <div class="description">
-      A 5k Javascript library for selecting, styling, traversing and animating DOM elements.
-  </div>
-  </div>
 
   <div id="container">
+    <h1><a href="http://github.com/julienw/dollardom">dollardom</a></h1>
+
+    <div class="description">
+      A small Javascript library for selecting, styling, traversing and animating DOM elements.
+    </div>
+
       <h2>Documentation</h2>
       <p>Documentation is available <a href='doc/'>on a separate page</a>.</p>
 
@@ -83,7 +80,7 @@
       <p>You can see some examples in action <a href='examples/'>on a separate page</a>.</p>
 
     <h2>License</h2>
-<p>Expat (BSD-like)</p>
+<p>BSD-like</p>
 
 
     <h2>Download</h2>
