@@ -4,6 +4,10 @@ _5k Javascript library for selecting, styling, traversing and animating DOM elem
 
 $dom was coded by Keith Clark and was once available at http://www.keithclark.co.uk/$dom/.
 
+The project is currently in maintainance mode. No new code is currently
+developed. However, since the library was developed with standards in mind,
+it's future-compatible and should work in all current browsers.
+
 FAQ
 ---
 
