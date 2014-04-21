@@ -93,7 +93,7 @@ a new syntax. I suggest you have a look to the $dom chaining API
 which is cleaner and simpler than the legacy API.
 
 ### Is there an alternative ?
-[ender.js](http://ender.no.de/) could be a good alternative with its
+[ender.js](http://ender.jit.su/) could be a good alternative with its
 modular approach. One of our goals is to integrate better with this tool.
 
 Development notes
