@@ -5,13 +5,10 @@
 *
 * Copyright 2011, 2012 Julien Wajsberg
 * Licensed under the MIT License
-* http://github.com/julienw/dollardom
+* https://github.com/julienw/dollardom
+* @preserve
 */
-(function (window)
-/* options for jshint are here because uglifyjs needs a real piece of code between the comments
- * it keeps and the comments it removes */
-/*jshint bitwise: true, curly: true, eqeqeq: true, immed: true, latedef: true, newcap: true, noarg: true, nonew: true, undef: true, boss: true, regexdash: true, smarttabs: true */
-{
+(function(window) {
     var 
     /* these references exist to reduce size in minifiers */
         _document = window.document,

@@ -1,0 +1,29 @@
+{
+  "name": "dollardom",
+  "version": "0.0.1",
+  "description": " A 5k Javascript library for selecting, styling, traversing and animating DOM elements.",
+  "main": "dollardom.min.js",
+  "directories": {
+    "doc": "doc",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julienw/dollardom/"
+  },
+  "keywords": [
+    "dom"
+  ],
+  "author": "Julien Wajsberg <felash@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "jshint": "^2.7.0",
+    "uglify-js": "^2.4.20"
+  }
+}

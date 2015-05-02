@@ -10,8 +10,6 @@
 */
 
 (function(window) {
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true */
-
     var $dom = window.$dom,
         _style = $dom.style,
         animItems = [],
@@ -70,7 +68,7 @@
                         style.s + (style.e - style.s) * ref
                         ) + style.u;
             
-                if (styles[prop] == "NaNpx") {
+                if (styles[prop] === "NaNpx") {
                     styles[prop] = 0;
                 }
             }
@@ -91,7 +89,7 @@
         var property, props = [], s, e, i = -1, c;
 
         for (c = animItems.length - 1; c >= 0; c--) {
-            if (animItems[c].elm == elm) {
+            if (animItems[c].elm === elm) {
                 i = c; break;
             }
         }

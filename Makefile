@@ -1,11 +1,11 @@
 # command to minify the javascript files
-JSMINIFY = uglifyjs
+JSMINIFY = node_modules/.bin/uglifyjs
 
 # options to give to the minification command
-JSMINIFY_OPTS = --unsafe --lift-vars
+JSMINIFY_OPTS = -c unsafe -m --comments --
 
 # command to run jshint
-CHECKJS = node lib/jshint/run.js
+CHECKJS = node_modules/.bin/jshint
 
 # modules to be built
 MODULES = dollardom dollardom-animate dollardom-chain dollardom-chain-animate
@@ -18,6 +18,9 @@ CONCAT = $(addsuffix .cat.js,$(MODULES))
 
 # all sources
 SOURCES = dollardom.js animate.js chain.js
+
+# tools installed by npm
+NPM_TOOLS = $(JSMINIFY) $(CHECKJS)
 
 # directory for source files
 VPATH = src
@@ -40,7 +43,7 @@ all: $(MINIFIED) dollardom-full.debug.js
 
 # recipe for minifying concatenated javascript files
 # it also removes the debug parts and checks the resulting file for correctness
-%.min.js: %.cat.js
+%.min.js: %.cat.js | $(JSMINIFY)
 	sed  -e '\#/\*!$(DEBUG_KEYWORD)!\*/#d' -e '\#/\*!$(DEBUG_KEYWORD)#,\#$(DEBUG_KEYWORD)!\*/#d' $< > $<.tmp
 	$(CHECKJS) $<.tmp
 	$(JSMINIFY) $(JSMINIFY_OPTS) $<.tmp > $@
@@ -52,7 +55,7 @@ all: $(MINIFIED) dollardom-full.debug.js
 # the recipe just concatenates all specified prerequisites together
 $(CONCAT): dollardom.js | checkjs
 	cat $^ > $@
-	
+
 # specify additional prerequisites for these targets
 dollardom-animate.cat.js: animate.js
 
@@ -70,6 +73,11 @@ clean:
 	-rm -f dollardom-full.debug.js
 	-rm checkjs
 
-checkjs: $(SOURCES)
+checkjs: $(SOURCES) | $(CHECKJS)
 	$(CHECKJS) $^
 	touch checkjs
+
+$(NPM_TOOLS): package.json
+	npm install
+	touch $@
+

@@ -10,8 +10,6 @@
 */
 
 (function(window) {
-/*jshint boss: true, bitwise: true, curly: true, newcap: true, noarg: true, nonew: true, latedef: true, regexdash: true */
-
     var $dom = window.$dom;
 
     /* utilities functions */
