@@ -1,0 +1,21 @@
+{
+  "name": "dollardom",
+  "version": "0.9.3",
+  "authors": [
+    "Julien Wajsberg <felash@gmail.com>"
+  ],
+  "description": "A 5k Javascript library for selecting, styling, traversing and animating DOM elements.",
+  "main": "dollardom.js",
+  "keywords": [
+    "dom"
+  ],
+  "license": "MIT",
+  "homepage": "http://julienw.github.io/dollardom/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

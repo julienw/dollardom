@@ -1,9 +1,9 @@
 /**
-* $dom library (v0.9.2b) copyright 2009, 2010, 2011 Keith Clark
+* $dom library (v0.9.3) copyright 2009, 2010, 2011 Keith Clark
 * Licensed under the MIT License.
 * http://www.keithclark.co.uk/
 *
-* Copyright 2011, 2012 Julien Wajsberg
+* Copyright 2011, 2012, 2013, 2014, 2015 Julien Wajsberg
 * Licensed under the MIT License
 * https://github.com/julienw/dollardom
 * @preserve

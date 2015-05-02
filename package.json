@@ -1,8 +1,8 @@
 {
   "name": "dollardom",
-  "version": "0.0.1",
+  "version": "0.9.3",
   "description": " A 5k Javascript library for selecting, styling, traversing and animating DOM elements.",
-  "main": "dollardom.min.js",
+  "main": "dollardom.js",
   "directories": {
     "doc": "doc",
     "example": "examples",
