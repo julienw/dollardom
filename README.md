@@ -2,7 +2,7 @@ $dom
 ====
 _5k Javascript library for selecting, styling, traversing and animating DOM elements._
 
-$dom was coded by Keith Clark and was once available at http://www.keithclark.co.uk/$dom/.
+$dom was coded by Keith Clark and was once available at ````http://www.keithclark.co.uk/$dom/```` (no longer active).
 
 The project is currently in maintainance mode. No new code is currently
 developed. However, since the library was developed with standards in mind,
