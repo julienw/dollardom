@@ -13,7 +13,7 @@ FAQ
 
 ### Which version to download ?
 
-`dollardom.js` is always the most up to date version. I consider that is
+`dollardom.js` is always the most up to date version. I consider that it
 is pretty good quality, which means that I still find bugs myself, but
 that I feel it can be used on real web sites or web applications. Please
 report any bug you find.
